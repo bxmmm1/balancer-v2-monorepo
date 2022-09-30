@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.0;
 
-import '@balancer-labs/v2-standalone-utils/contracts/ProtocolFeeSplitter.sol';
-// import '../munged/standalone-utils/contracts/ProtocolFeeSplitter.sol';
+// import '@balancer-labs/v2-standalone-utils/contracts/ProtocolFeeSplitter.sol';
+import '../munged/standalone-utils/contracts/ProtocolFeeSplitter.sol';
 
 contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
   constructor(IProtocolFeesCollector _protocolFeesCollector, address _treasury)
@@ -17,9 +17,9 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
         return IERC20(VaultHelpers.toPoolAddress(poolId)).balanceOf(address(protocolFeesCollector));
   }
 
-  // function getBptOwner(bytes32 poolId) public returns (address) {
-  //   return Pool(VaultHelpers.toPoolAddress(poolId)).getOwner();
-  // }
+  function getBptOwner(bytes32 poolId) public returns (address) {
+    return Pool(VaultHelpers.toPoolAddress(poolId)).getOwner();
+  }
 
   function getBeneficiary(bytes32 poolId) public returns (address) {
     return poolSettings[poolId].beneficiary;
@@ -53,4 +53,12 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
     return IERC20(getBpt(poolId)).balanceOf(addr);
   }
 
+  function getTotalSupply(bytes32 poolId) public returns(uint256) {
+    return IERC20(getBpt(poolId)).totalSupply();
+  }
+
+  function getFeePercentage(bytes32 poolId) public returns(uint256 feePercentage) {
+    uint256 poolFeeOverride = poolSettings[poolId].revenueSharePercentageOverride;
+    feePercentage = poolFeeOverride != 0 ? poolFeeOverride : defaultRevenueSharingFeePercentage;
+  }
 }

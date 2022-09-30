@@ -5,11 +5,11 @@ methods{
     setDefaultRevenueSharingFeePercentage(uint256)
     setPoolBeneficiary(bytes32, address)
     collectFees(bytes32)
-    treasury() envfree
-    toPoolAddress(bytes32) returns(address) => NONDET
+    treasury() returns(address) envfree    
+    toPoolAddress(bytes32) returns(address) => DISPATCHER(true)
     getBpt(bytes32) returns(address) envfree
-    // getBptOwner(bytes32) returns(address) envfree
-    getOwner(bytes32) => PER_CALLEE_CONSTANT 
+    getBptOwner(bytes32) returns(address) envfree
+    getOwner() returns(address) => PER_CALLEE_CONSTANT 
     getBeneficiary(bytes32) returns(address) envfree
     getRevenueSharePercentageOverride(bytes32) returns(uint256) envfree
     protocolFeesCollector() returns(address) envfree
@@ -19,7 +19,9 @@ methods{
     getDelegateOwner() returns(address) envfree
     toUint96(uint256) returns(uint96) envfree
     getBalance(bytes32,address) returns(uint256) envfree
+    getTotalSupply(bytes32) returns(uint256) envfree
     getFeeCollectorBptBalance(bytes32) returns(uint256) envfree
+    getFeePercentage(bytes32) returns(uint256) envfree
 
     withdrawCollectedFees(address[],uint256[],address) => DISPATCHER(true)
 }
@@ -64,21 +66,37 @@ rule SetPoolBeneficiaryCorrectly() {
     assert(successful => newBeneficiary==getBeneficiary(poolId));
 }
 
-rule CollectFeesWoBeneficiary() {
+rule CollectFeesTotal() {
     env e;    
     bytes32 poolId;
-    
-    require getBeneficiary(poolId) == 0;
+                
     uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
+    uint256 feePercentage = getFeePercentage(poolId);
     address treasuryAddr = treasury();
-    uint256 _balance = getBalance(poolId, treasuryAddr);
+    address beneficiaryAddr = getBeneficiary(poolId);
+    uint256 _treasuryBalance = getBalance(poolId, treasuryAddr);
+    uint256 _beneficiaryBalance = getBalance(poolId, beneficiaryAddr);
+    uint256 _totalSupply = getTotalSupply(poolId);
+
+    require treasuryAddr != beneficiaryAddr;
+    require treasuryAddr != protocolFeesCollector();
+    require beneficiaryAddr != protocolFeesCollector();
 
     collectFees@withrevert(e, poolId);
     bool successful = !lastReverted;
 
-    uint256 balance_ = getBalance(poolId, treasuryAddr);
+    uint256 treasuryBalance_ = getBalance(poolId, treasuryAddr);
+    uint256 beneficiaryBalance_ = getBalance(poolId, beneficiaryAddr);
+    uint256 totalSupply_ = getTotalSupply(poolId);
+
     assert feeCollectorBptBalance==0 => !successful;
-    assert successful => _balance + feeCollectorBptBalance == balance_;
+    if (successful) {
+        assert getBeneficiary(poolId) == 0 => _beneficiaryBalance ==  beneficiaryBalance_;    
+        assert feePercentage == 0 => beneficiaryBalance_ == _beneficiaryBalance;
+        assert feeCollectorBptBalance == (treasuryBalance_ - _treasuryBalance) + (beneficiaryBalance_ - _beneficiaryBalance);
+        assert totalSupply_ == _totalSupply;
+    } else 
+        assert true;
 }
 
 rule sanity(method f)

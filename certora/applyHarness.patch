@@ -1,38 +1,1832 @@
-diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/Authentication.sol solidity-utils/contracts/helpers/Authentication.sol
---- solidity-utils/contracts/helpers/Authentication.sol	2022-09-21 10:18:48.380398900 -0400
-+++ solidity-utils/contracts/helpers/Authentication.sol	2022-09-27 13:23:59.972213500 -0400
-@@ -17,6 +17,9 @@
- import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
- import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' distributors/contracts/MerkleOrchard.sol distributors/contracts/MerkleOrchard.sol
+--- distributors/contracts/MerkleOrchard.sol	2022-09-29 15:52:09.858627700 -0400
++++ distributors/contracts/MerkleOrchard.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,13 +14,13 @@
  
-+// import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
-+// import "../../interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
-+
- /**
-  * @dev Building block for performing access control on external functions.
-  *
-diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeeSplitter.sol standalone-utils/contracts/ProtocolFeeSplitter.sol
---- standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-21 14:17:15.169951500 -0400
-+++ standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-27 16:01:33.498037800 -0400
-@@ -16,12 +16,17 @@
  pragma experimental ABIEncoderV2;
  
- import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IProtocolFeeSplitter.sol";
--
- import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
- import "@balancer-labs/v2-solidity-utils/contracts/helpers/VaultHelpers.sol";
- import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
- import "@balancer-labs/v2-interfaces/contracts/vault/IProtocolFeesCollector.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/distributors/IDistributorCallback.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAsset.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/distributors/IDistributorCallback.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IAsset.sol";
  
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/MerkleProof.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/MerkleProof.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ pragma solidity ^0.7.0;
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' distributors/contracts/MerkleRedeem.sol distributors/contracts/MerkleRedeem.sol
+--- distributors/contracts/MerkleRedeem.sol	2022-09-29 15:52:09.870622700 -0400
++++ distributors/contracts/MerkleRedeem.sol	2022-09-29 17:22:47.362349300 -0400
+@@ -14,15 +14,15 @@
+ 
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/distributors/IDistributorCallback.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAsset.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/distributors/IDistributorCallback.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IAsset.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/MerkleProof.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Ownable.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/openzeppelin/MerkleProof.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/Ownable.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ pragma solidity ^0.7.0;
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' distributors/contracts/test/MockRewardCallback.sol distributors/contracts/test/MockRewardCallback.sol
+--- distributors/contracts/test/MockRewardCallback.sol	2022-09-29 15:52:09.882622300 -0400
++++ distributors/contracts/test/MockRewardCallback.sol	2022-09-29 17:22:47.363350800 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/distributors/IDistributorCallback.sol";
++import "../../interfaces/contracts/distributors/IDistributorCallback.sol";
+ 
+ contract MockRewardCallback is IDistributorCallback {
+     event CallbackReceived();
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/BalancerMinter.sol liquidity-mining/contracts/BalancerMinter.sol
+--- liquidity-mining/contracts/BalancerMinter.sol	2022-09-29 15:52:11.064269500 -0400
++++ liquidity-mining/contracts/BalancerMinter.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -14,15 +14,15 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IGaugeController.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
++import "../../interfaces/contracts/liquidity-mining/IGaugeController.sol";
++import "../../interfaces/contracts/liquidity-mining/ILiquidityGauge.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeMath.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EIP712.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/EOASignaturesValidator.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeMath.sol";
++import "../../solidity-utils/contracts/openzeppelin/EIP712.sol";
++import "../../solidity-utils/contracts/helpers/EOASignaturesValidator.sol";
+ 
+ contract BalancerMinter is IBalancerMinter, ReentrancyGuard, EOASignaturesValidator {
+     using SafeMath for uint256;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/BalancerTokenAdmin.sol liquidity-mining/contracts/BalancerTokenAdmin.sol
+--- liquidity-mining/contracts/BalancerTokenAdmin.sol	2022-09-29 15:52:11.078269300 -0400
++++ liquidity-mining/contracts/BalancerTokenAdmin.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,12 +14,12 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // solhint-disable not-rely-on-time
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/SmartWalletChecker.sol liquidity-mining/contracts/SmartWalletChecker.sol
+--- liquidity-mining/contracts/SmartWalletChecker.sol	2022-09-29 15:52:11.123267600 -0400
++++ liquidity-mining/contracts/SmartWalletChecker.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,11 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISmartWalletChecker.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/ISmartWalletChecker.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+ 
+ contract SmartWalletChecker is ISmartWalletChecker, SingletonAuthentication {
+     using EnumerableSet for EnumerableSet.AddressSet;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/VotingEscrowDelegationProxy.sol liquidity-mining/contracts/VotingEscrowDelegationProxy.sol
+--- liquidity-mining/contracts/VotingEscrowDelegationProxy.sol	2022-09-29 15:52:11.145269500 -0400
++++ liquidity-mining/contracts/VotingEscrowDelegationProxy.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -14,10 +14,10 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IVeDelegation.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IVeDelegation.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+ 
+ contract VotingEscrowDelegationProxy is SingletonAuthentication {
+     IERC20 private immutable _votingEscrow;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/admin/AuthorizerAdaptor.sol liquidity-mining/contracts/admin/AuthorizerAdaptor.sol
+--- liquidity-mining/contracts/admin/AuthorizerAdaptor.sol	2022-09-29 15:52:11.164285900 -0400
++++ liquidity-mining/contracts/admin/AuthorizerAdaptor.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,12 +14,12 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAuthorizer.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
++import "../../interfaces/contracts/vault/IAuthorizer.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ /**
+  * @title Authorizer Adaptor
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/admin/ChildChainGaugeTokenAdder.sol liquidity-mining/contracts/admin/ChildChainGaugeTokenAdder.sol
+--- liquidity-mining/contracts/admin/ChildChainGaugeTokenAdder.sol	2022-09-29 15:52:11.175267900 -0400
++++ liquidity-mining/contracts/admin/ChildChainGaugeTokenAdder.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IChildChainLiquidityGaugeFactory.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
++import "../../interfaces/contracts/liquidity-mining/IChildChainLiquidityGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+ 
+ /**
+  * @title ChildChainGaugeTokenAdder
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/admin/DistributionScheduler.sol liquidity-mining/contracts/admin/DistributionScheduler.sol
+--- liquidity-mining/contracts/admin/DistributionScheduler.sol	2022-09-29 15:52:11.186267400 -0400
++++ liquidity-mining/contracts/admin/DistributionScheduler.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IRewardTokenDistributor.sol";
++import "../../interfaces/contracts/liquidity-mining/IRewardTokenDistributor.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ // solhint-disable not-rely-on-time
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/admin/GaugeAdder.sol liquidity-mining/contracts/admin/GaugeAdder.sol
+--- liquidity-mining/contracts/admin/GaugeAdder.sol	2022-09-29 15:52:11.197267600 -0400
++++ liquidity-mining/contracts/admin/GaugeAdder.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,14 +14,14 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IGaugeAdder.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IGaugeAdder.sol";
++import "../../interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
+ 
+ contract GaugeAdder is IGaugeAdder, SingletonAuthentication, ReentrancyGuard {
+     using EnumerableSet for EnumerableSet.AddressSet;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/fee-distribution/FeeDistributor.sol liquidity-mining/contracts/fee-distribution/FeeDistributor.sol
+--- liquidity-mining/contracts/fee-distribution/FeeDistributor.sol	2022-09-29 15:52:11.210267300 -0400
++++ liquidity-mining/contracts/fee-distribution/FeeDistributor.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,16 +15,16 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IFeeDistributor.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IVotingEscrow.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
++import "../../interfaces/contracts/liquidity-mining/IFeeDistributor.sol";
++import "../../interfaces/contracts/liquidity-mining/IVotingEscrow.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/OptionalOnlyCaller.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeMath.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/OptionalOnlyCaller.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeMath.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // solhint-disable not-rely-on-time
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/ChildChainGaugeRewardHelper.sol liquidity-mining/contracts/gauges/ChildChainGaugeRewardHelper.sol
+--- liquidity-mining/contracts/gauges/ChildChainGaugeRewardHelper.sol	2022-09-29 15:52:11.241269200 -0400
++++ liquidity-mining/contracts/gauges/ChildChainGaugeRewardHelper.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IRewardsOnlyGauge.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IChildChainStreamer.sol";
++import "../../interfaces/contracts/liquidity-mining/IRewardsOnlyGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/IChildChainStreamer.sol";
+ 
+ /**
+  * @title ChildChainGaugeRewardHelper
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/ChildChainLiquidityGaugeFactory.sol liquidity-mining/contracts/gauges/ChildChainLiquidityGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/ChildChainLiquidityGaugeFactory.sol	2022-09-29 15:53:19.916886700 -0400
++++ liquidity-mining/contracts/gauges/ChildChainLiquidityGaugeFactory.sol	2022-09-29 17:22:47.356353900 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IChildChainLiquidityGaugeFactory.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGauge.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IChildChainLiquidityGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/ILiquidityGauge.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ contract ChildChainLiquidityGaugeFactory is IChildChainLiquidityGaugeFactory {
+     // RewardsOnlyGauge expects the claim function selector to be left padded with zeros.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/StakelessGauge.sol liquidity-mining/contracts/gauges/StakelessGauge.sol
+--- liquidity-mining/contracts/gauges/StakelessGauge.sol	2022-09-29 15:53:19.928886900 -0400
++++ liquidity-mining/contracts/gauges/StakelessGauge.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -14,13 +14,13 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IGaugeController.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IStakelessGauge.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerTokenAdmin.sol";
++import "../../interfaces/contracts/liquidity-mining/IGaugeController.sol";
++import "../../interfaces/contracts/liquidity-mining/IStakelessGauge.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ 
+ abstract contract StakelessGauge is IStakelessGauge, ReentrancyGuard {
+     IERC20 internal immutable _balToken;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGauge.sol liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGauge.sol
+--- liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGauge.sol	2022-09-29 15:53:19.940883500 -0400
++++ liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGauge.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IArbitrumFeeProvider.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/IArbitrumFeeProvider.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
+ 
+ import "../StakelessGauge.sol";
+ import "./IGatewayRouter.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGaugeFactory.sol liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGaugeFactory.sol	2022-09-29 15:53:19.952881900 -0400
++++ liquidity-mining/contracts/gauges/arbitrum/ArbitrumRootGaugeFactory.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ import "./ArbitrumRootGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/arbitrum/IGatewayRouter.sol liquidity-mining/contracts/gauges/arbitrum/IGatewayRouter.sol
+--- liquidity-mining/contracts/gauges/arbitrum/IGatewayRouter.sol	2022-09-29 15:52:11.330268800 -0400
++++ liquidity-mining/contracts/gauges/arbitrum/IGatewayRouter.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ interface IGatewayRouter {
+     function outboundTransfer(
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/ethereum/LiquidityGaugeFactory.sol liquidity-mining/contracts/gauges/ethereum/LiquidityGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/ethereum/LiquidityGaugeFactory.sol	2022-09-29 15:53:19.966883600 -0400
++++ liquidity-mining/contracts/gauges/ethereum/LiquidityGaugeFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ contract LiquidityGaugeFactory is ILiquidityGaugeFactory {
+     ILiquidityGauge private immutable _gaugeImplementation;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/ethereum/SingleRecipientGauge.sol liquidity-mining/contracts/gauges/ethereum/SingleRecipientGauge.sol
+--- liquidity-mining/contracts/gauges/ethereum/SingleRecipientGauge.sol	2022-09-29 15:53:19.991883000 -0400
++++ liquidity-mining/contracts/gauges/ethereum/SingleRecipientGauge.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ import "../StakelessGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/ethereum/SingleRecipientGaugeFactory.sol liquidity-mining/contracts/gauges/ethereum/SingleRecipientGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/ethereum/SingleRecipientGaugeFactory.sol	2022-09-29 15:53:20.002884900 -0400
++++ liquidity-mining/contracts/gauges/ethereum/SingleRecipientGaugeFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ import "./SingleRecipientGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/optimism/OptimismRootGauge.sol liquidity-mining/contracts/gauges/optimism/OptimismRootGauge.sol
+--- liquidity-mining/contracts/gauges/optimism/OptimismRootGauge.sol	2022-09-29 15:53:20.014882800 -0400
++++ liquidity-mining/contracts/gauges/optimism/OptimismRootGauge.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IOptimismGasLimitProvider.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/IOptimismGasLimitProvider.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
+ 
+ import "../StakelessGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/optimism/OptimismRootGaugeFactory.sol liquidity-mining/contracts/gauges/optimism/OptimismRootGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/optimism/OptimismRootGaugeFactory.sol	2022-09-29 15:53:20.026888400 -0400
++++ liquidity-mining/contracts/gauges/optimism/OptimismRootGaugeFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ import "./OptimismRootGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/polygon/PolygonRootGauge.sol liquidity-mining/contracts/gauges/polygon/PolygonRootGauge.sol
+--- liquidity-mining/contracts/gauges/polygon/PolygonRootGauge.sol	2022-09-29 15:53:20.039888900 -0400
++++ liquidity-mining/contracts/gauges/polygon/PolygonRootGauge.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGauge.sol";
+ 
+ import "../StakelessGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/gauges/polygon/PolygonRootGaugeFactory.sol liquidity-mining/contracts/gauges/polygon/PolygonRootGaugeFactory.sol
+--- liquidity-mining/contracts/gauges/polygon/PolygonRootGaugeFactory.sol	2022-09-29 15:53:20.052886500 -0400
++++ liquidity-mining/contracts/gauges/polygon/PolygonRootGaugeFactory.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
++import "../../interfaces/contracts/liquidity-mining/ISingleRecipientGaugeFactory.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ import "./PolygonRootGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/test/MockGaugeController.sol liquidity-mining/contracts/test/MockGaugeController.sol
+--- liquidity-mining/contracts/test/MockGaugeController.sol	2022-09-29 15:53:20.066881400 -0400
++++ liquidity-mining/contracts/test/MockGaugeController.sol	2022-09-29 17:22:47.357352600 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IGaugeController.sol";
++import "../../interfaces/contracts/liquidity-mining/IGaugeController.sol";
+ 
+ // For compatibility, we're keeping the same function names as in the original Curve code, including the mixed-case
+ // naming convention.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/test/MockLiquidityGaugeFactory.sol liquidity-mining/contracts/test/MockLiquidityGaugeFactory.sol
+--- liquidity-mining/contracts/test/MockLiquidityGaugeFactory.sol	2022-09-29 15:53:20.087886600 -0400
++++ liquidity-mining/contracts/test/MockLiquidityGaugeFactory.sol	2022-09-29 17:22:47.356353900 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/ILiquidityGaugeFactory.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Clones.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/Clones.sol";
+ 
+ import "./MockLiquidityGauge.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/test/MockRewardTokenDistributor.sol liquidity-mining/contracts/test/MockRewardTokenDistributor.sol
+--- liquidity-mining/contracts/test/MockRewardTokenDistributor.sol	2022-09-29 15:52:11.592269300 -0400
++++ liquidity-mining/contracts/test/MockRewardTokenDistributor.sol	2022-09-29 17:22:47.356353900 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IRewardTokenDistributor.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/liquidity-mining/IRewardTokenDistributor.sol";
+ 
+ // solhint-disable func-name-mixedcase, var-name-mixedcase, not-rely-on-time
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/test/TestAccessControl.sol liquidity-mining/contracts/test/TestAccessControl.sol
+--- liquidity-mining/contracts/test/TestAccessControl.sol	2022-09-29 15:52:11.609268200 -0400
++++ liquidity-mining/contracts/test/TestAccessControl.sol	2022-09-29 17:22:47.362349300 -0400
+@@ -2,8 +2,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ // This contract maintains the old AccessControl behaviour which is used by BalancerGovernanceToken in production
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' liquidity-mining/contracts/test/TestBalancerToken.sol liquidity-mining/contracts/test/TestBalancerToken.sol
+--- liquidity-mining/contracts/test/TestBalancerToken.sol	2022-09-29 15:52:11.621268800 -0400
++++ liquidity-mining/contracts/test/TestBalancerToken.sol	2022-09-29 17:22:47.356353900 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20Burnable.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20Permit.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20Burnable.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20Permit.sol";
+ 
+ import "./TestAccessControl.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/LinearMath.sol pool-linear/contracts/LinearMath.sol
+--- pool-linear/contracts/LinearMath.sol	2022-09-29 15:52:11.846266800 -0400
++++ pool-linear/contracts/LinearMath.sol	2022-09-29 17:22:47.177180600 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // These functions start with an underscore, as if they were part of a contract and not a library. At some point this
+ // should be fixed.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/LinearPool.sol pool-linear/contracts/LinearPool.sol
+--- pool-linear/contracts/LinearPool.sol	2022-09-29 15:53:20.124881900 -0400
++++ pool-linear/contracts/LinearPool.sol	2022-09-29 17:22:47.177180600 -0400
+@@ -15,17 +15,17 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/LinearPoolUserData.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IRateProvider.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/ILinearPool.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IGeneralPool.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/pool-linear/LinearPoolUserData.sol";
++import "../../interfaces/contracts/pool-utils/IRateProvider.sol";
++import "../../interfaces/contracts/pool-linear/ILinearPool.sol";
++import "../../interfaces/contracts/vault/IGeneralPool.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/BasePool.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/rates/PriceRateCache.sol";
++import "../../pool-utils/contracts/BasePool.sol";
++import "../../pool-utils/contracts/rates/PriceRateCache.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ERC20Helpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/helpers/ERC20Helpers.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ import "./LinearMath.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/LinearPoolRebalancer.sol pool-linear/contracts/LinearPoolRebalancer.sol
+--- pool-linear/contracts/LinearPoolRebalancer.sol	2022-09-29 15:53:20.139883000 -0400
++++ pool-linear/contracts/LinearPoolRebalancer.sol	2022-09-29 17:22:47.136179700 -0400
+@@ -15,14 +15,14 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBalancerQueries.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/ILinearPool.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/standalone-utils/IBalancerQueries.sol";
++import "../../interfaces/contracts/pool-linear/ILinearPool.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ abstract contract LinearPoolRebalancer {
+     using SafeERC20 for IERC20;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/aave/AaveLinearPool.sol pool-linear/contracts/aave/AaveLinearPool.sol
+--- pool-linear/contracts/aave/AaveLinearPool.sol	2022-09-29 15:53:20.155884000 -0400
++++ pool-linear/contracts/aave/AaveLinearPool.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IStaticAToken.sol";
++import "../../interfaces/contracts/pool-linear/IStaticAToken.sol";
+ 
+ import "../LinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/aave/AaveLinearPoolFactory.sol pool-linear/contracts/aave/AaveLinearPoolFactory.sol
+--- pool-linear/contracts/aave/AaveLinearPoolFactory.sol	2022-09-29 15:53:20.169884700 -0400
++++ pool-linear/contracts/aave/AaveLinearPoolFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./AaveLinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/aave/AaveLinearPoolRebalancer.sol pool-linear/contracts/aave/AaveLinearPoolRebalancer.sol
+--- pool-linear/contracts/aave/AaveLinearPoolRebalancer.sol	2022-09-29 15:53:20.180882300 -0400
++++ pool-linear/contracts/aave/AaveLinearPoolRebalancer.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IStaticAToken.sol";
++import "../../interfaces/contracts/pool-linear/IStaticAToken.sol";
+ 
+ import "../LinearPoolRebalancer.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/button-wood/UnbuttonAaveLinearPool.sol pool-linear/contracts/button-wood/UnbuttonAaveLinearPool.sol
+--- pool-linear/contracts/button-wood/UnbuttonAaveLinearPool.sol	2022-09-29 15:52:11.947268500 -0400
++++ pool-linear/contracts/button-wood/UnbuttonAaveLinearPool.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IUnbuttonToken.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IAToken.sol";
++import "../../interfaces/contracts/pool-linear/IUnbuttonToken.sol";
++import "../../interfaces/contracts/pool-linear/IAToken.sol";
+ 
+ import "../LinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/button-wood/UnbuttonAaveLinearPoolFactory.sol pool-linear/contracts/button-wood/UnbuttonAaveLinearPoolFactory.sol
+--- pool-linear/contracts/button-wood/UnbuttonAaveLinearPoolFactory.sol	2022-09-29 15:53:20.190883700 -0400
++++ pool-linear/contracts/button-wood/UnbuttonAaveLinearPoolFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./UnbuttonAaveLinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/erc4626/ERC4626LinearPool.sol pool-linear/contracts/erc4626/ERC4626LinearPool.sol
+--- pool-linear/contracts/erc4626/ERC4626LinearPool.sol	2022-09-29 15:52:11.985025500 -0400
++++ pool-linear/contracts/erc4626/ERC4626LinearPool.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IERC4626.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IERC4626.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "../LinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/erc4626/ERC4626LinearPoolFactory.sol pool-linear/contracts/erc4626/ERC4626LinearPoolFactory.sol
+--- pool-linear/contracts/erc4626/ERC4626LinearPoolFactory.sol	2022-09-29 15:53:20.202884500 -0400
++++ pool-linear/contracts/erc4626/ERC4626LinearPoolFactory.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./ERC4626LinearPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/test/MockAaveAMPLToken.sol pool-linear/contracts/test/MockAaveAMPLToken.sol
+--- pool-linear/contracts/test/MockAaveAMPLToken.sol	2022-09-29 15:52:12.023025000 -0400
++++ pool-linear/contracts/test/MockAaveAMPLToken.sol	2022-09-29 17:22:47.222180400 -0400
+@@ -16,7 +16,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IAToken.sol";
++import "../../interfaces/contracts/pool-linear/IAToken.sol";
+ 
+ import "./MockUnbuttonERC20.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/test/MockERC4626Token.sol pool-linear/contracts/test/MockERC4626Token.sol
+--- pool-linear/contracts/test/MockERC4626Token.sol	2022-09-29 15:52:12.039031800 -0400
++++ pool-linear/contracts/test/MockERC4626Token.sol	2022-09-29 17:22:47.221179400 -0400
+@@ -14,11 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IERC4626.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IERC4626.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/test/TestToken.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/test/TestToken.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ contract MockERC4626Token is TestToken, IERC4626 {
+     using FixedPoint for uint256;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/test/MockStaticAToken.sol pool-linear/contracts/test/MockStaticAToken.sol
+--- pool-linear/contracts/test/MockStaticAToken.sol	2022-09-29 15:52:12.084022900 -0400
++++ pool-linear/contracts/test/MockStaticAToken.sol	2022-09-29 17:22:47.221179400 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IStaticAToken.sol";
++import "../../interfaces/contracts/pool-linear/IStaticAToken.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/test/TestToken.sol";
++import "../../solidity-utils/contracts/test/TestToken.sol";
+ 
+ contract MockStaticAToken is TestToken, IStaticAToken, ILendingPool {
+     uint256 private _rate = 1e27;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-linear/contracts/test/MockUnbuttonERC20.sol pool-linear/contracts/test/MockUnbuttonERC20.sol
+--- pool-linear/contracts/test/MockUnbuttonERC20.sol	2022-09-29 15:52:12.095028000 -0400
++++ pool-linear/contracts/test/MockUnbuttonERC20.sol	2022-09-29 17:22:47.221179400 -0400
+@@ -16,10 +16,10 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IButtonWrapper.sol";
++import "../../interfaces/contracts/pool-linear/IButtonWrapper.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ contract MockUnbuttonERC20 is ERC20, IButtonWrapper {
+     using SafeERC20 for IERC20;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-stable-phantom/contracts/StableMath.sol pool-stable-phantom/contracts/StableMath.sol
+--- pool-stable-phantom/contracts/StableMath.sol	2022-09-29 15:53:20.328885000 -0400
++++ pool-stable-phantom/contracts/StableMath.sol	2022-09-29 17:22:47.091184400 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // These functions start with an underscore, as if they were part of a contract and not a library. At some point this
+ // should be fixed. Additionally, some variables have non mixed case names (e.g. P_D) that relate to the mathematical
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-stable-phantom/contracts/StablePhantomPool.sol pool-stable-phantom/contracts/StablePhantomPool.sol
+--- pool-stable-phantom/contracts/StablePhantomPool.sol	2022-09-29 15:53:20.344885000 -0400
++++ pool-stable-phantom/contracts/StablePhantomPool.sol	2022-09-29 17:22:47.088182500 -0400
+@@ -15,19 +15,19 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-stable-phantom/StablePhantomPoolUserData.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IRateProvider.sol";
++import "../../interfaces/contracts/pool-stable-phantom/StablePhantomPoolUserData.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/pool-utils/IRateProvider.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ERC20Helpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/helpers/ERC20Helpers.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/BaseGeneralPool.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/rates/PriceRateCache.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/ProtocolFeeCache.sol";
++import "../../pool-utils/contracts/BaseGeneralPool.sol";
++import "../../pool-utils/contracts/rates/PriceRateCache.sol";
++import "../../pool-utils/contracts/ProtocolFeeCache.sol";
+ 
+ import "./StableMath.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-stable-phantom/contracts/StablePhantomPoolFactory.sol pool-stable-phantom/contracts/StablePhantomPoolFactory.sol
+--- pool-stable-phantom/contracts/StablePhantomPoolFactory.sol	2022-09-29 15:53:20.362883800 -0400
++++ pool-stable-phantom/contracts/StablePhantomPoolFactory.sol	2022-09-29 17:22:47.042180200 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./StablePhantomPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-stable-phantom/contracts/test/MockStablePhantomPool.sol pool-stable-phantom/contracts/test/MockStablePhantomPool.sol
+--- pool-stable-phantom/contracts/test/MockStablePhantomPool.sol	2022-09-29 15:53:20.393892200 -0400
++++ pool-stable-phantom/contracts/test/MockStablePhantomPool.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/test/MockFailureModes.sol";
++import "../../pool-utils/contracts/test/MockFailureModes.sol";
+ 
+ import "../StablePhantomPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/AumProtocolFeeCache.sol pool-utils/contracts/AumProtocolFeeCache.sol
+--- pool-utils/contracts/AumProtocolFeeCache.sol	2022-09-29 15:53:20.502884500 -0400
++++ pool-utils/contracts/AumProtocolFeeCache.sol	2022-09-29 17:22:47.224183500 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IAumProtocolFeesCollector.sol";
++import "../../interfaces/contracts/standalone-utils/IAumProtocolFeesCollector.sol";
+ 
+ /**
+  * @title Store a cached Protocol AUM Fee Percentage
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/BalancerPoolToken.sol pool-utils/contracts/BalancerPoolToken.sol
+--- pool-utils/contracts/BalancerPoolToken.sol	2022-09-29 15:52:12.656025800 -0400
++++ pool-utils/contracts/BalancerPoolToken.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20Permit.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20Permit.sol";
+ 
+ /**
+  * @title Highly opinionated token implementation
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/BaseGeneralPool.sol pool-utils/contracts/BaseGeneralPool.sol
+--- pool-utils/contracts/BaseGeneralPool.sol	2022-09-29 15:53:20.517883300 -0400
++++ pool-utils/contracts/BaseGeneralPool.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IGeneralPool.sol";
++import "../../interfaces/contracts/vault/IGeneralPool.sol";
+ 
+ import "./BasePool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/BaseMinimalSwapInfoPool.sol pool-utils/contracts/BaseMinimalSwapInfoPool.sol
+--- pool-utils/contracts/BaseMinimalSwapInfoPool.sol	2022-09-29 15:53:20.530885600 -0400
++++ pool-utils/contracts/BaseMinimalSwapInfoPool.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
++import "../../interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
+ 
+ import "./BasePool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/BasePool.sol pool-utils/contracts/BasePool.sol
+--- pool-utils/contracts/BasePool.sol	2022-09-29 15:53:20.550883900 -0400
++++ pool-utils/contracts/BasePool.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,16 +15,16 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IAssetManager.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasePool.sol";
++import "../../interfaces/contracts/pool-utils/IAssetManager.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IBasePool.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/TemporarilyPausable.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/helpers/TemporarilyPausable.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./BalancerPoolToken.sol";
+ import "./BasePoolAuthorization.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/BasePoolAuthorization.sol pool-utils/contracts/BasePoolAuthorization.sol
+--- pool-utils/contracts/BasePoolAuthorization.sol	2022-09-29 15:52:12.796958600 -0400
++++ pool-utils/contracts/BasePoolAuthorization.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAuthorizer.sol";
++import "../../interfaces/contracts/vault/IAuthorizer.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
+ 
+ /**
+  * @dev Base authorization layer implementation for Pools.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/ProtocolFeeCache.sol pool-utils/contracts/ProtocolFeeCache.sol
+--- pool-utils/contracts/ProtocolFeeCache.sol	2022-09-29 15:53:20.566889800 -0400
++++ pool-utils/contracts/ProtocolFeeCache.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "./RecoveryMode.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/RecoveryMode.sol pool-utils/contracts/RecoveryMode.sol
+--- pool-utils/contracts/RecoveryMode.sol	2022-09-29 15:53:20.581883600 -0400
++++ pool-utils/contracts/RecoveryMode.sol	2022-09-29 17:22:47.039181100 -0400
+@@ -14,11 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/BasePoolUserData.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IRecoveryMode.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/pool-utils/BasePoolUserData.sol";
++import "../../interfaces/contracts/pool-utils/IRecoveryMode.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ import "./BasePoolAuthorization.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/controllers/BasePoolController.sol pool-utils/contracts/controllers/BasePoolController.sol
+--- pool-utils/contracts/controllers/BasePoolController.sol	2022-09-29 15:52:12.842951300 -0400
++++ pool-utils/contracts/controllers/BasePoolController.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IBasePoolController.sol";
++import "../../interfaces/contracts/pool-utils/IBasePoolController.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
+ 
+ import "../BasePoolAuthorization.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/controllers/ManagedPoolController.sol pool-utils/contracts/controllers/ManagedPoolController.sol
+--- pool-utils/contracts/controllers/ManagedPoolController.sol	2022-09-29 15:53:20.595883600 -0400
++++ pool-utils/contracts/controllers/ManagedPoolController.sol	2022-09-29 17:22:47.040180500 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IControlledManagedPool.sol";
++import "../../interfaces/contracts/pool-utils/IControlledManagedPool.sol";
+ 
+ import "./BasePoolController.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol
+--- pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol	2022-09-29 15:53:20.608887100 -0400
++++ pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol	2022-09-29 17:22:47.042180200 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
++import "../../solidity-utils/contracts/helpers/BaseSplitCodeFactory.sol";
+ 
+ /**
+  * @notice Base contract for Pool factories.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/rates/PriceRateCache.sol pool-utils/contracts/rates/PriceRateCache.sol
+--- pool-utils/contracts/rates/PriceRateCache.sol	2022-09-29 15:52:12.945950700 -0400
++++ pool-utils/contracts/rates/PriceRateCache.sol	2022-09-29 17:22:47.039181100 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
+ 
+ /**
+  * Price rate caches are used to avoid querying the price rate for a token every time we need to work with it. It is
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockAssetManager.sol pool-utils/contracts/test/MockAssetManager.sol
+--- pool-utils/contracts/test/MockAssetManager.sol	2022-09-29 15:52:12.961950800 -0400
++++ pool-utils/contracts/test/MockAssetManager.sol	2022-09-29 17:22:47.039181100 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IAssetManager.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/pool-utils/IAssetManager.sol";
+ 
+ contract MockAssetManager is IAssetManager {
+     event Rebalanced(address assetManager, bytes32 poolId, IERC20 token, bool force);
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockBalancerPoolToken.sol pool-utils/contracts/test/MockBalancerPoolToken.sol
+--- pool-utils/contracts/test/MockBalancerPoolToken.sol	2022-09-29 15:52:12.975954600 -0400
++++ pool-utils/contracts/test/MockBalancerPoolToken.sol	2022-09-29 17:22:47.057182300 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "../BalancerPoolToken.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockBasePool.sol pool-utils/contracts/test/MockBasePool.sol
+--- pool-utils/contracts/test/MockBasePool.sol	2022-09-29 15:53:20.636884100 -0400
++++ pool-utils/contracts/test/MockBasePool.sol	2022-09-29 17:22:46.989181100 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
++import "../../interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
+ 
+ import "../BasePool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockFailureModes.sol pool-utils/contracts/test/MockFailureModes.sol
+--- pool-utils/contracts/test/MockFailureModes.sol	2022-09-29 15:52:13.013163000 -0400
++++ pool-utils/contracts/test/MockFailureModes.sol	2022-09-29 17:22:46.989181100 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ abstract contract MockFailureModes {
+     enum FailureMode { INVARIANT, PRICE_RATE }
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockPoolSplitCodeFactory.sol pool-utils/contracts/test/MockPoolSplitCodeFactory.sol
+--- pool-utils/contracts/test/MockPoolSplitCodeFactory.sol	2022-09-29 15:53:20.650882800 -0400
++++ pool-utils/contracts/test/MockPoolSplitCodeFactory.sol	2022-09-29 17:22:46.989181100 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "../factories/BasePoolSplitCodeFactory.sol";
+ import "./MockFactoryCreatedPool.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockRateProvider.sol pool-utils/contracts/test/MockRateProvider.sol
+--- pool-utils/contracts/test/MockRateProvider.sol	2022-09-29 15:52:13.076163900 -0400
++++ pool-utils/contracts/test/MockRateProvider.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-utils/IRateProvider.sol";
++import "../../interfaces/contracts/pool-utils/IRateProvider.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ contract MockRateProvider is IRateProvider {
+     uint256 internal _rate;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-utils/contracts/test/MockVault.sol pool-utils/contracts/test/MockVault.sol
+--- pool-utils/contracts/test/MockVault.sol	2022-09-29 15:53:20.689884000 -0400
++++ pool-utils/contracts/test/MockVault.sol	2022-09-29 17:22:47.039181100 -0400
+@@ -15,15 +15,15 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasePool.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IGeneralPool.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IPoolSwapStructs.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IBasePool.sol";
++import "../../interfaces/contracts/vault/IGeneralPool.sol";
++import "../../interfaces/contracts/vault/IPoolSwapStructs.sol";
++import "../../interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
+ 
+-import "@balancer-labs/v2-vault/contracts/ProtocolFeesCollector.sol";
++import "../../vault/contracts/ProtocolFeesCollector.sol";
+ 
+ contract MockVault is IPoolSwapStructs {
+     struct Pool {
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/BaseWeightedPool.sol pool-weighted/contracts/BaseWeightedPool.sol
+--- pool-weighted/contracts/BaseWeightedPool.sol	2022-09-29 15:53:20.780888300 -0400
++++ pool-weighted/contracts/BaseWeightedPool.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,12 +15,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
++import "../../interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/BaseMinimalSwapInfoPool.sol";
++import "../../pool-utils/contracts/BaseMinimalSwapInfoPool.sol";
+ 
+ import "./WeightedMath.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/WeightedMath.sol pool-weighted/contracts/WeightedMath.sol
+--- pool-weighted/contracts/WeightedMath.sol	2022-09-29 15:53:20.810884800 -0400
++++ pool-weighted/contracts/WeightedMath.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // These functions start with an underscore, as if they were part of a contract and not a library. At some point this
+ // should be fixed.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/WeightedPoolFactory.sol pool-weighted/contracts/WeightedPoolFactory.sol
+--- pool-weighted/contracts/WeightedPoolFactory.sol	2022-09-29 15:53:20.852884400 -0400
++++ pool-weighted/contracts/WeightedPoolFactory.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./WeightedPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/WeightedPoolNoAMFactory.sol pool-weighted/contracts/WeightedPoolNoAMFactory.sol
+--- pool-weighted/contracts/WeightedPoolNoAMFactory.sol	2022-09-29 15:53:20.868888500 -0400
++++ pool-weighted/contracts/WeightedPoolNoAMFactory.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./WeightedPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/lib/GradualValueChange.sol pool-weighted/contracts/lib/GradualValueChange.sol
+--- pool-weighted/contracts/lib/GradualValueChange.sol	2022-09-29 15:52:13.406165100 -0400
++++ pool-weighted/contracts/lib/GradualValueChange.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -12,8 +12,8 @@
+ // You should have received a copy of the GNU General Public License
+ // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ pragma solidity ^0.7.0;
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/lib/WeightCompression.sol pool-weighted/contracts/lib/WeightCompression.sol
+--- pool-weighted/contracts/lib/WeightCompression.sol	2022-09-29 15:52:13.423164900 -0400
++++ pool-weighted/contracts/lib/WeightCompression.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ /**
+  * @dev Library for compressing and decompressing numbers by using smaller types.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/smart/BaseManagedPoolFactory.sol pool-weighted/contracts/smart/BaseManagedPoolFactory.sol
+--- pool-weighted/contracts/smart/BaseManagedPoolFactory.sol	2022-09-29 15:53:20.892885700 -0400
++++ pool-weighted/contracts/smart/BaseManagedPoolFactory.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+-import "@balancer-labs/v2-standalone-utils/contracts/AumProtocolFeesCollector.sol";
++import "../../standalone-utils/contracts/AumProtocolFeesCollector.sol";
+ 
+ import "./ManagedPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/smart/LiquidityBootstrappingPool.sol pool-weighted/contracts/smart/LiquidityBootstrappingPool.sol
+--- pool-weighted/contracts/smart/LiquidityBootstrappingPool.sol	2022-09-29 15:52:13.456165900 -0400
++++ pool-weighted/contracts/smart/LiquidityBootstrappingPool.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "../lib/GradualValueChange.sol";
+ import "../lib/WeightCompression.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/smart/LiquidityBootstrappingPoolFactory.sol pool-weighted/contracts/smart/LiquidityBootstrappingPoolFactory.sol
+--- pool-weighted/contracts/smart/LiquidityBootstrappingPoolFactory.sol	2022-09-29 15:53:20.909883600 -0400
++++ pool-weighted/contracts/smart/LiquidityBootstrappingPoolFactory.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
++import "../../pool-utils/contracts/factories/BasePoolSplitCodeFactory.sol";
++import "../../pool-utils/contracts/factories/FactoryWidePauseWindow.sol";
+ 
+ import "./LiquidityBootstrappingPool.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/smart/ManagedPool.sol pool-weighted/contracts/smart/ManagedPool.sol
+--- pool-weighted/contracts/smart/ManagedPool.sol	2022-09-29 15:53:20.926888100 -0400
++++ pool-weighted/contracts/smart/ManagedPool.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,16 +15,16 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
++import "../../interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ERC20Helpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ArrayHelpers.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
++import "../../solidity-utils/contracts/helpers/ERC20Helpers.sol";
++import "../../solidity-utils/contracts/helpers/WordCodec.sol";
++import "../../solidity-utils/contracts/helpers/ArrayHelpers.sol";
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/AumProtocolFeeCache.sol";
+-import "@balancer-labs/v2-pool-utils/contracts/ProtocolFeeCache.sol";
++import "../../pool-utils/contracts/AumProtocolFeeCache.sol";
++import "../../pool-utils/contracts/ProtocolFeeCache.sol";
+ 
+ import "../lib/GradualValueChange.sol";
+ import "../lib/WeightCompression.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' pool-weighted/contracts/smart/ManagedPoolFactory.sol pool-weighted/contracts/smart/ManagedPoolFactory.sol
+--- pool-weighted/contracts/smart/ManagedPoolFactory.sol	2022-09-29 15:52:13.519176200 -0400
++++ pool-weighted/contracts/smart/ManagedPoolFactory.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-pool-utils/contracts/controllers/ManagedPoolController.sol";
++import "../../pool-utils/contracts/controllers/ManagedPoolController.sol";
+ 
+ import "./BaseManagedPoolFactory.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/Authentication.sol solidity-utils/contracts/helpers/Authentication.sol
+--- solidity-utils/contracts/helpers/Authentication.sol	2022-09-29 15:52:13.959164600 -0400
++++ solidity-utils/contracts/helpers/Authentication.sol	2022-09-29 17:24:16.603151400 -0400
+@@ -14,8 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
++
++// import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++// import "../../interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+ 
+ /**
+  * @dev Building block for performing access control on external functions.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/CodeDeployer.sol solidity-utils/contracts/helpers/CodeDeployer.sol
+--- solidity-utils/contracts/helpers/CodeDeployer.sol	2022-09-29 15:52:13.988166400 -0400
++++ solidity-utils/contracts/helpers/CodeDeployer.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Library used to deploy contracts with specific code. This can be used for long-term storage of immutable data as
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/EOASignaturesValidator.sol solidity-utils/contracts/helpers/EOASignaturesValidator.sol
+--- solidity-utils/contracts/helpers/EOASignaturesValidator.sol	2022-09-29 15:53:21.119883700 -0400
++++ solidity-utils/contracts/helpers/EOASignaturesValidator.sol	2022-09-29 17:22:46.988189700 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/ISignaturesValidator.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/ISignaturesValidator.sol";
+ 
+ import "../openzeppelin/EIP712.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/ERC20Helpers.sol solidity-utils/contracts/helpers/ERC20Helpers.sol
+--- solidity-utils/contracts/helpers/ERC20Helpers.sol	2022-09-29 15:53:21.139883800 -0400
++++ solidity-utils/contracts/helpers/ERC20Helpers.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAsset.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IAsset.sol";
+ 
+ // solhint-disable
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol
+--- solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol	2022-09-29 15:52:14.025169800 -0400
++++ solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol	2022-09-29 17:22:46.814179300 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ import "./EOASignaturesValidator.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/InputHelpers.sol solidity-utils/contracts/helpers/InputHelpers.sol
+--- solidity-utils/contracts/helpers/InputHelpers.sol	2022-09-29 15:52:14.039164700 -0400
++++ solidity-utils/contracts/helpers/InputHelpers.sol	2022-09-29 18:38:03.755557200 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ library InputHelpers {
+     function ensureInputLengthMatch(uint256 a, uint256 b) internal pure {
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/OptionalOnlyCaller.sol solidity-utils/contracts/helpers/OptionalOnlyCaller.sol
+--- solidity-utils/contracts/helpers/OptionalOnlyCaller.sol	2022-09-29 15:52:14.060164000 -0400
++++ solidity-utils/contracts/helpers/OptionalOnlyCaller.sol	2022-09-29 17:22:46.814179300 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/IOptionalOnlyCaller.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/IOptionalOnlyCaller.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ import "./SignaturesValidator.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/SignaturesValidator.sol solidity-utils/contracts/helpers/SignaturesValidator.sol
+--- solidity-utils/contracts/helpers/SignaturesValidator.sol	2022-09-29 15:52:14.071166100 -0400
++++ solidity-utils/contracts/helpers/SignaturesValidator.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC1271.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC1271.sol";
+ 
+ import "./EOASignaturesValidator.sol";
+ import "../openzeppelin/Address.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/SingletonAuthentication.sol solidity-utils/contracts/helpers/SingletonAuthentication.sol
+--- solidity-utils/contracts/helpers/SingletonAuthentication.sol	2022-09-29 15:52:14.085163700 -0400
++++ solidity-utils/contracts/helpers/SingletonAuthentication.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IAuthorizerAdaptor.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "./Authentication.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/TemporarilyPausable.sol solidity-utils/contracts/helpers/TemporarilyPausable.sol
+--- solidity-utils/contracts/helpers/TemporarilyPausable.sol	2022-09-29 15:52:14.094164000 -0400
++++ solidity-utils/contracts/helpers/TemporarilyPausable.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/ITemporarilyPausable.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/ITemporarilyPausable.sol";
+ 
+ /**
+  * @dev Allows for a contract to be paused during an initial period after deployment, disabling functionality. Can be
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/helpers/WordCodec.sol solidity-utils/contracts/helpers/WordCodec.sol
+--- solidity-utils/contracts/helpers/WordCodec.sol	2022-09-29 15:53:21.154884900 -0400
++++ solidity-utils/contracts/helpers/WordCodec.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ import "../math/Math.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/math/FixedPoint.sol solidity-utils/contracts/math/FixedPoint.sol
+--- solidity-utils/contracts/math/FixedPoint.sol	2022-09-29 15:52:14.144160300 -0400
++++ solidity-utils/contracts/math/FixedPoint.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ import "./LogExpMath.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/math/LogExpMath.sol solidity-utils/contracts/math/LogExpMath.sol
+--- solidity-utils/contracts/math/LogExpMath.sol	2022-09-29 15:52:14.160164600 -0400
++++ solidity-utils/contracts/math/LogExpMath.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /* solhint-disable */
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/math/Math.sol solidity-utils/contracts/math/Math.sol
+--- solidity-utils/contracts/math/Math.sol	2022-09-29 15:52:14.174166400 -0400
++++ solidity-utils/contracts/math/Math.sol	2022-09-29 17:24:51.648727400 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Wrappers over Solidity's arithmetic operations with added overflow checks.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/Address.sol solidity-utils/contracts/openzeppelin/Address.sol
+--- solidity-utils/contracts/openzeppelin/Address.sol	2022-09-29 15:52:14.188165400 -0400
++++ solidity-utils/contracts/openzeppelin/Address.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -5,7 +5,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Collection of functions related to the address type
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/Create2.sol solidity-utils/contracts/openzeppelin/Create2.sol
+--- solidity-utils/contracts/openzeppelin/Create2.sol	2022-09-29 15:52:14.215167000 -0400
++++ solidity-utils/contracts/openzeppelin/Create2.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Helper to make usage of the `CREATE2` EVM opcode easier and safer.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/ERC20.sol solidity-utils/contracts/openzeppelin/ERC20.sol
+--- solidity-utils/contracts/openzeppelin/ERC20.sol	2022-09-29 15:53:21.177886800 -0400
++++ solidity-utils/contracts/openzeppelin/ERC20.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -2,8 +2,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ import "./SafeMath.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/ERC20Permit.sol solidity-utils/contracts/openzeppelin/ERC20Permit.sol
+--- solidity-utils/contracts/openzeppelin/ERC20Permit.sol	2022-09-29 15:52:14.270164900 -0400
++++ solidity-utils/contracts/openzeppelin/ERC20Permit.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20Permit.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20Permit.sol";
+ 
+ import "./ERC20.sol";
+ import "../helpers/EOASignaturesValidator.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/EnumerableMap.sol solidity-utils/contracts/openzeppelin/EnumerableMap.sol
+--- solidity-utils/contracts/openzeppelin/EnumerableMap.sol	2022-09-29 15:52:14.285165700 -0400
++++ solidity-utils/contracts/openzeppelin/EnumerableMap.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -11,8 +11,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ /**
+  * @dev Library for managing an enumerable variant of Solidity's
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/EnumerableSet.sol solidity-utils/contracts/openzeppelin/EnumerableSet.sol
+--- solidity-utils/contracts/openzeppelin/EnumerableSet.sol	2022-09-29 15:52:14.298164000 -0400
++++ solidity-utils/contracts/openzeppelin/EnumerableSet.sol	2022-09-29 17:22:46.813182700 -0400
+@@ -7,7 +7,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Library for managing
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/Ownable.sol solidity-utils/contracts/openzeppelin/Ownable.sol
+--- solidity-utils/contracts/openzeppelin/Ownable.sol	2022-09-29 15:52:14.386162200 -0400
++++ solidity-utils/contracts/openzeppelin/Ownable.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -5,7 +5,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Contract module which provides a basic access control mechanism, where
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol
+--- solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol	2022-09-29 15:52:14.405168900 -0400
++++ solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol	2022-09-29 18:40:07.099847800 -0400
+@@ -6,7 +6,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Contract module that helps prevent reentrant calls to a function.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/SafeCast.sol solidity-utils/contracts/openzeppelin/SafeCast.sol
+--- solidity-utils/contracts/openzeppelin/SafeCast.sol	2022-09-29 15:52:14.418172600 -0400
++++ solidity-utils/contracts/openzeppelin/SafeCast.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Wrappers over Solidity's uintXX/intXX casting operators with added overflow
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/SafeERC20.sol solidity-utils/contracts/openzeppelin/SafeERC20.sol
+--- solidity-utils/contracts/openzeppelin/SafeERC20.sol	2022-09-29 15:52:14.432164400 -0400
++++ solidity-utils/contracts/openzeppelin/SafeERC20.sol	2022-09-29 18:40:44.127495000 -0400
+@@ -6,8 +6,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ /**
+  * @title SafeERC20
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/openzeppelin/SafeMath.sol solidity-utils/contracts/openzeppelin/SafeMath.sol
+--- solidity-utils/contracts/openzeppelin/SafeMath.sol	2022-09-29 15:52:14.445164500 -0400
++++ solidity-utils/contracts/openzeppelin/SafeMath.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ /**
+  * @dev Wrappers over Solidity's arithmetic operations with added overflow
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/test/BalancerErrorsMock.sol solidity-utils/contracts/test/BalancerErrorsMock.sol
+--- solidity-utils/contracts/test/BalancerErrorsMock.sol	2022-09-29 15:53:21.195885500 -0400
++++ solidity-utils/contracts/test/BalancerErrorsMock.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+ contract BalancerErrorsMock {
+     function fail(uint256 code) external pure {
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/test/ERC1271Mock.sol solidity-utils/contracts/test/ERC1271Mock.sol
+--- solidity-utils/contracts/test/ERC1271Mock.sol	2022-09-29 15:52:14.497165300 -0400
++++ solidity-utils/contracts/test/ERC1271Mock.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC1271.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC1271.sol";
+ 
+ contract ERC1271Mock is IERC1271 {
+     mapping(bytes32 => bool) private _approved;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/test/EnumerableMapMock.sol solidity-utils/contracts/test/EnumerableMapMock.sol
+--- solidity-utils/contracts/test/EnumerableMapMock.sol	2022-09-29 15:52:14.542165600 -0400
++++ solidity-utils/contracts/test/EnumerableMapMock.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -2,7 +2,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ import "../openzeppelin/EnumerableMap.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' solidity-utils/contracts/test/SingletonAuthenticationMock.sol solidity-utils/contracts/test/SingletonAuthenticationMock.sol
+--- solidity-utils/contracts/test/SingletonAuthenticationMock.sol	2022-09-29 15:52:14.709167600 -0400
++++ solidity-utils/contracts/test/SingletonAuthenticationMock.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "../helpers/SingletonAuthentication.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/AumProtocolFeesCollector.sol standalone-utils/contracts/AumProtocolFeesCollector.sol
+--- standalone-utils/contracts/AumProtocolFeesCollector.sol	2022-09-29 15:53:21.224890300 -0400
++++ standalone-utils/contracts/AumProtocolFeesCollector.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -15,12 +15,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IAumProtocolFeesCollector.sol";
++import "../../interfaces/contracts/standalone-utils/IAumProtocolFeesCollector.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ /**
+  * @dev This an auxiliary contract to the Vault, deployed by it during construction. It offloads some of the tasks the
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/BALTokenHolder.sol standalone-utils/contracts/BALTokenHolder.sol
+--- standalone-utils/contracts/BALTokenHolder.sol	2022-09-29 15:52:14.993165400 -0400
++++ standalone-utils/contracts/BALTokenHolder.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -14,12 +14,12 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerToken.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBALTokenHolder.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerToken.sol";
++import "../../interfaces/contracts/standalone-utils/IBALTokenHolder.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ /**
+  * @dev This contract simply holds the BAL token and delegates to Balancer Governance the permission to withdraw it. It
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/BALTokenHolderFactory.sol standalone-utils/contracts/BALTokenHolderFactory.sol
+--- standalone-utils/contracts/BALTokenHolderFactory.sol	2022-09-29 15:52:15.006169500 -0400
++++ standalone-utils/contracts/BALTokenHolderFactory.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -14,11 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerToken.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBALTokenHolderFactory.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerToken.sol";
++import "../../interfaces/contracts/standalone-utils/IBALTokenHolderFactory.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
+ 
+ import "./BALTokenHolder.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/BalancerQueries.sol standalone-utils/contracts/BalancerQueries.sol
+--- standalone-utils/contracts/BalancerQueries.sol	2022-09-29 15:52:15.016166200 -0400
++++ standalone-utils/contracts/BalancerQueries.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -15,16 +15,16 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasePool.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IWETH.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IBasePool.sol";
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBalancerQueries.sol";
++import "../../interfaces/contracts/standalone-utils/IBalancerQueries.sol";
+ 
+-import "@balancer-labs/v2-vault/contracts/AssetHelpers.sol";
++import "../../vault/contracts/AssetHelpers.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
+ 
+ /**
+  * @dev This contract simply builds on top of the Balancer V2 architecture to provide useful helpers to users.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeePercentagesProvider.sol standalone-utils/contracts/ProtocolFeePercentagesProvider.sol
+--- standalone-utils/contracts/ProtocolFeePercentagesProvider.sol	2022-09-29 15:52:15.037185500 -0400
++++ standalone-utils/contracts/ProtocolFeePercentagesProvider.sol	2022-09-29 17:22:46.812180700 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IProtocolFeesCollector.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IProtocolFeePercentagesProvider.sol";
++import "../../interfaces/contracts/vault/IProtocolFeesCollector.sol";
++import "../../interfaces/contracts/standalone-utils/IProtocolFeePercentagesProvider.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeCast.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeCast.sol";
+ 
+ contract ProtocolFeePercentagesProvider is IProtocolFeePercentagesProvider, SingletonAuthentication {
+     using SafeCast for uint256;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeeSplitter.sol standalone-utils/contracts/ProtocolFeeSplitter.sol
+--- standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-29 15:53:21.255883800 -0400
++++ standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-29 21:13:09.612029500 -0400
+@@ -15,12 +15,17 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IProtocolFeeSplitter.sol";
+-
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/VaultHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IProtocolFeesCollector.sol";
++import "../../interfaces/contracts/standalone-utils/IProtocolFeeSplitter.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/helpers/VaultHelpers.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
++import "../../interfaces/contracts/vault/IProtocolFeesCollector.sol";
++
 +// import "../../interfaces/contracts/standalone-utils/IProtocolFeeSplitter.sol";
 +// import "../../../harness/VaultHelpersHarness.sol";
 +// import "../../solidity-utils/contracts/helpers/Authentication.sol";
 +// import "../../solidity-utils/contracts/math/Math.sol";
 +// import "../../interfaces/contracts/vault/IProtocolFeesCollector.sol";
-+
+ 
  interface Pool {
      function getOwner() external returns (address);
- }
 @@ -43,9 +48,9 @@
  
      // All fee percentages are 18-decimal fixed point numbers.
@@ -46,3 +1840,787 @@ diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance
  
      IProtocolFeesCollector public immutable protocolFeesCollector;
  
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeesWithdrawer.sol standalone-utils/contracts/ProtocolFeesWithdrawer.sol
+--- standalone-utils/contracts/ProtocolFeesWithdrawer.sol	2022-09-29 15:52:15.047164400 -0400
++++ standalone-utils/contracts/ProtocolFeesWithdrawer.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -14,11 +14,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IProtocolFeesWithdrawer.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/standalone-utils/IProtocolFeesWithdrawer.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+ 
+ /**
+  * @author Balancer Labs
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/AaveWrapping.sol standalone-utils/contracts/relayer/AaveWrapping.sol
+--- standalone-utils/contracts/relayer/AaveWrapping.sol	2022-09-29 15:52:15.060171000 -0400
++++ standalone-utils/contracts/relayer/AaveWrapping.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IStaticATokenLM.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/standalone-utils/IStaticATokenLM.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/BalancerRelayer.sol standalone-utils/contracts/relayer/BalancerRelayer.sol
+--- standalone-utils/contracts/relayer/BalancerRelayer.sol	2022-09-29 15:52:15.071167400 -0400
++++ standalone-utils/contracts/relayer/BalancerRelayer.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBalancerRelayer.sol";
++import "../../interfaces/contracts/standalone-utils/IBalancerRelayer.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ /**
+  * @title Balancer Relayer
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/BaseRelayerLibrary.sol standalone-utils/contracts/relayer/BaseRelayerLibrary.sol
+--- standalone-utils/contracts/relayer/BaseRelayerLibrary.sol	2022-09-29 15:53:21.283883400 -0400
++++ standalone-utils/contracts/relayer/BaseRelayerLibrary.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBalancerRelayer.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/standalone-utils/IBalancerRelayer.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ import "./BalancerRelayer.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/ERC4626Wrapping.sol standalone-utils/contracts/relayer/ERC4626Wrapping.sol
+--- standalone-utils/contracts/relayer/ERC4626Wrapping.sol	2022-09-29 15:52:15.096163000 -0400
++++ standalone-utils/contracts/relayer/ERC4626Wrapping.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IERC4626.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IERC4626.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/GaugeActions.sol standalone-utils/contracts/relayer/GaugeActions.sol
+--- standalone-utils/contracts/relayer/GaugeActions.sol	2022-09-29 15:52:15.107168900 -0400
++++ standalone-utils/contracts/relayer/GaugeActions.sol	2022-09-29 17:22:46.806179500 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
+-import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/liquidity-mining/IBalancerMinter.sol";
++import "../../interfaces/contracts/liquidity-mining/IStakingLiquidityGauge.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/IBaseRelayerLibrary.sol standalone-utils/contracts/relayer/IBaseRelayerLibrary.sol
+--- standalone-utils/contracts/relayer/IBaseRelayerLibrary.sol	2022-09-29 15:53:21.316883600 -0400
++++ standalone-utils/contracts/relayer/IBaseRelayerLibrary.sol	2022-09-29 17:22:46.769186700 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-vault/contracts/AssetHelpers.sol";
++import "../../vault/contracts/AssetHelpers.sol";
+ 
+ /**
+  * @title IBaseRelayerLibrary
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/LidoWrapping.sol standalone-utils/contracts/relayer/LidoWrapping.sol
+--- standalone-utils/contracts/relayer/LidoWrapping.sol	2022-09-29 15:52:15.128165800 -0400
++++ standalone-utils/contracts/relayer/LidoWrapping.sol	2022-09-29 17:22:46.769186700 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IstETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IwstETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/standalone-utils/IstETH.sol";
++import "../../interfaces/contracts/standalone-utils/IwstETH.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/UnbuttonWrapping.sol standalone-utils/contracts/relayer/UnbuttonWrapping.sol
+--- standalone-utils/contracts/relayer/UnbuttonWrapping.sol	2022-09-29 15:52:15.143164000 -0400
++++ standalone-utils/contracts/relayer/UnbuttonWrapping.sol	2022-09-29 17:22:46.769186700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-linear/IUnbuttonToken.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/pool-linear/IUnbuttonToken.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/VaultActions.sol standalone-utils/contracts/relayer/VaultActions.sol
+--- standalone-utils/contracts/relayer/VaultActions.sol	2022-09-29 15:52:15.157167100 -0400
++++ standalone-utils/contracts/relayer/VaultActions.sol	2022-09-29 17:22:46.769186700 -0400
+@@ -15,12 +15,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/VaultHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/VaultHelpers.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/VaultPermit.sol standalone-utils/contracts/relayer/VaultPermit.sol
+--- standalone-utils/contracts/relayer/VaultPermit.sol	2022-09-29 15:52:15.170171200 -0400
++++ standalone-utils/contracts/relayer/VaultPermit.sol	2022-09-29 17:22:46.768181900 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20Permit.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20PermitDAI.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20Permit.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20PermitDAI.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+ import "./IBaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/relayer/special/DoubleEntrypointFixRelayer.sol standalone-utils/contracts/relayer/special/DoubleEntrypointFixRelayer.sol
+--- standalone-utils/contracts/relayer/special/DoubleEntrypointFixRelayer.sol	2022-09-29 15:53:21.333884900 -0400
++++ standalone-utils/contracts/relayer/special/DoubleEntrypointFixRelayer.sol	2022-09-29 17:22:46.769186700 -0400
+@@ -15,13 +15,13 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/pool-stable/StablePoolUserData.sol";
+-import "@balancer-labs/v2-interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IFlashLoanRecipient.sol";
++import "../../interfaces/contracts/pool-stable/StablePoolUserData.sol";
++import "../../interfaces/contracts/pool-weighted/WeightedPoolUserData.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IFlashLoanRecipient.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ERC20Helpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/helpers/ERC20Helpers.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ import "hardhat/console.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/test/MockBaseRelayerLibrary.sol standalone-utils/contracts/test/MockBaseRelayerLibrary.sol
+--- standalone-utils/contracts/test/MockBaseRelayerLibrary.sol	2022-09-29 15:52:15.195165000 -0400
++++ standalone-utils/contracts/test/MockBaseRelayerLibrary.sol	2022-09-29 17:22:46.768181900 -0400
+@@ -16,7 +16,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-//import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IBaseRelayerLibrary.sol";
++//import "../../interfaces/contracts/standalone-utils/IBaseRelayerLibrary.sol";
+ 
+ import "../relayer/BaseRelayerLibrary.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/test/MockStETH.sol standalone-utils/contracts/test/MockStETH.sol
+--- standalone-utils/contracts/test/MockStETH.sol	2022-09-29 15:52:15.216645700 -0400
++++ standalone-utils/contracts/test/MockStETH.sol	2022-09-29 17:22:46.742181000 -0400
+@@ -16,10 +16,10 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IstETH.sol";
++import "../../interfaces/contracts/standalone-utils/IstETH.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/test/TestToken.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/test/TestToken.sol";
+ 
+ contract MockStETH is TestToken, IstETH {
+     constructor(
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/test/MockWstETH.sol standalone-utils/contracts/test/MockWstETH.sol
+--- standalone-utils/contracts/test/MockWstETH.sol	2022-09-29 15:52:15.225655500 -0400
++++ standalone-utils/contracts/test/MockWstETH.sol	2022-09-29 17:22:46.735181400 -0400
+@@ -16,11 +16,11 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IstETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/standalone-utils/IwstETH.sol";
++import "../../interfaces/contracts/standalone-utils/IstETH.sol";
++import "../../interfaces/contracts/standalone-utils/IwstETH.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/openzeppelin/ERC20.sol";
+ 
+ contract MockWstETH is ERC20, IwstETH {
+     using FixedPoint for uint256;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/test/TestWETH.sol standalone-utils/contracts/test/TestWETH.sol
+--- standalone-utils/contracts/test/TestWETH.sol	2022-09-29 15:52:15.236648300 -0400
++++ standalone-utils/contracts/test/TestWETH.sol	2022-09-29 17:22:46.735181400 -0400
+@@ -16,7 +16,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IWETH.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IWETH.sol";
+ 
+ contract TestWETH is IWETH {
+     string public name = "Wrapped Ether";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/AssetHelpers.sol vault/contracts/AssetHelpers.sol
+--- vault/contracts/AssetHelpers.sol	2022-09-29 15:52:15.458829700 -0400
++++ vault/contracts/AssetHelpers.sol	2022-09-29 17:22:46.735181400 -0400
+@@ -14,9 +14,9 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAsset.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IWETH.sol";
++import "../../interfaces/contracts/vault/IAsset.sol";
+ 
+ abstract contract AssetHelpers {
+     // solhint-disable-next-line var-name-mixedcase
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/AssetManagers.sol vault/contracts/AssetManagers.sol
+--- vault/contracts/AssetManagers.sol	2022-09-29 15:52:15.537810400 -0400
++++ vault/contracts/AssetManagers.sol	2022-09-29 17:22:46.735181400 -0400
+@@ -15,13 +15,13 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./UserBalance.sol";
+ import "./balances/BalanceAllocation.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/AssetTransfersHandler.sol vault/contracts/AssetTransfersHandler.sol
+--- vault/contracts/AssetTransfersHandler.sol	2022-09-29 15:52:15.557808900 -0400
++++ vault/contracts/AssetTransfersHandler.sol	2022-09-29 17:22:46.710187500 -0400
+@@ -15,15 +15,15 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAsset.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IWETH.sol";
++import "../../interfaces/contracts/vault/IAsset.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./AssetHelpers.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/Fees.sol vault/contracts/Fees.sol
+--- vault/contracts/Fees.sol	2022-09-29 15:52:15.576809700 -0400
++++ vault/contracts/Fees.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,13 +15,13 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ import "./ProtocolFeesCollector.sol";
+ import "./VaultAuthorization.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/FlashLoans.sol vault/contracts/FlashLoans.sol
+--- vault/contracts/FlashLoans.sol	2022-09-29 15:52:15.592807300 -0400
++++ vault/contracts/FlashLoans.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -19,12 +19,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IFlashLoanRecipient.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IFlashLoanRecipient.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ import "./Fees.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/PoolBalances.sol vault/contracts/PoolBalances.sol
+--- vault/contracts/PoolBalances.sol	2022-09-29 15:52:15.607809400 -0400
++++ vault/contracts/PoolBalances.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,14 +15,14 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasePool.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IBasePool.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./Fees.sol";
+ import "./PoolTokens.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/PoolRegistry.sol vault/contracts/PoolRegistry.sol
+--- vault/contracts/PoolRegistry.sol	2022-09-29 15:52:15.625807200 -0400
++++ vault/contracts/PoolRegistry.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ 
+ import "./VaultAuthorization.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/PoolTokens.sol vault/contracts/PoolTokens.sol
+--- vault/contracts/PoolTokens.sol	2022-09-29 15:52:15.643807900 -0400
++++ vault/contracts/PoolTokens.sol	2022-09-29 17:22:46.660187300 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ 
+ import "./AssetManagers.sol";
+ import "./PoolRegistry.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/ProtocolFeesCollector.sol vault/contracts/ProtocolFeesCollector.sol
+--- vault/contracts/ProtocolFeesCollector.sol	2022-09-29 15:52:15.660809900 -0400
++++ vault/contracts/ProtocolFeesCollector.sol	2022-09-29 17:22:46.660187300 -0400
+@@ -15,12 +15,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IProtocolFeesCollector.sol";
++import "../../interfaces/contracts/vault/IProtocolFeesCollector.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+ 
+ /**
+  * @dev This an auxiliary contract to the Vault, deployed by it during construction. It offloads some of the tasks the
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/Swaps.sol vault/contracts/Swaps.sol
+--- vault/contracts/Swaps.sol	2022-09-29 15:52:15.681809500 -0400
++++ vault/contracts/Swaps.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,20 +15,20 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IPoolSwapStructs.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IGeneralPool.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
++import "../../interfaces/contracts/vault/IPoolSwapStructs.sol";
++import "../../interfaces/contracts/vault/IGeneralPool.sol";
++import "../../interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeCast.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeCast.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./PoolBalances.sol";
+ import "./balances/BalanceAllocation.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/UserBalance.sol vault/contracts/UserBalance.sol
+--- vault/contracts/UserBalance.sol	2022-09-29 15:52:15.703808600 -0400
++++ vault/contracts/UserBalance.sol	2022-09-29 17:22:46.634181700 -0400
+@@ -15,13 +15,13 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeCast.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeCast.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./AssetTransfersHandler.sol";
+ import "./VaultAuthorization.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/Vault.sol vault/contracts/Vault.sol
+--- vault/contracts/Vault.sol	2022-09-29 15:52:15.720816000 -0400
++++ vault/contracts/Vault.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/misc/IWETH.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAuthorizer.sol";
++import "../../interfaces/contracts/solidity-utils/misc/IWETH.sol";
++import "../../interfaces/contracts/vault/IAuthorizer.sol";
+ 
+ import "./VaultAuthorization.sol";
+ import "./FlashLoans.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/VaultAuthorization.sol vault/contracts/VaultAuthorization.sol
+--- vault/contracts/VaultAuthorization.sol	2022-09-29 15:52:15.735809900 -0400
++++ vault/contracts/VaultAuthorization.sol	2022-09-29 17:22:46.634181700 -0400
+@@ -15,14 +15,14 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAuthorizer.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IAuthorizer.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/TemporarilyPausable.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/Authentication.sol";
++import "../../solidity-utils/contracts/helpers/ExtraCalldataEOASignaturesValidator.sol";
++import "../../solidity-utils/contracts/helpers/TemporarilyPausable.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ 
+ /**
+  * @dev Manages access control of Vault permissioned functions by relying on the Authorizer and signature validation.
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/authorizer/TimelockAuthorizer.sol vault/contracts/authorizer/TimelockAuthorizer.sol
+--- vault/contracts/authorizer/TimelockAuthorizer.sol	2022-09-29 15:53:21.499886700 -0400
++++ vault/contracts/authorizer/TimelockAuthorizer.sol	2022-09-29 17:22:46.709183400 -0400
+@@ -15,15 +15,15 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IAuthorizer.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/IAuthentication.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IAuthorizer.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ import "./TimelockExecutor.sol";
+ 
+ /**
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/authorizer/TimelockAuthorizerMigrator.sol vault/contracts/authorizer/TimelockAuthorizerMigrator.sol
+--- vault/contracts/authorizer/TimelockAuthorizerMigrator.sol	2022-09-29 15:53:21.520884100 -0400
++++ vault/contracts/authorizer/TimelockAuthorizerMigrator.sol	2022-09-29 17:22:46.709183400 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasicAuthorizer.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IBasicAuthorizer.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "./TimelockAuthorizer.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/authorizer/TimelockExecutor.sol vault/contracts/authorizer/TimelockExecutor.sol
+--- vault/contracts/authorizer/TimelockExecutor.sol	2022-09-29 15:52:15.777806900 -0400
++++ vault/contracts/authorizer/TimelockExecutor.sol	2022-09-29 17:22:46.709183400 -0400
+@@ -14,8 +14,8 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/Address.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
++import "../../solidity-utils/contracts/openzeppelin/Address.sol";
++import "../../solidity-utils/contracts/openzeppelin/ReentrancyGuard.sol";
+ 
+ import "./TimelockAuthorizer.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/balances/BalanceAllocation.sol vault/contracts/balances/BalanceAllocation.sol
+--- vault/contracts/balances/BalanceAllocation.sol	2022-09-29 15:52:15.790808800 -0400
++++ vault/contracts/balances/BalanceAllocation.sol	2022-09-29 17:22:46.709183400 -0400
+@@ -14,7 +14,7 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ // This library is used to create a data structure that represents a token's balance for a Pool. 'cash' is how many
+ // tokens the Pool has sitting inside of the Vault. 'managed' is how many tokens were withdrawn from the Vault by the
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/balances/GeneralPoolsBalance.sol vault/contracts/balances/GeneralPoolsBalance.sol
+--- vault/contracts/balances/GeneralPoolsBalance.sol	2022-09-29 15:52:15.808807900 -0400
++++ vault/contracts/balances/GeneralPoolsBalance.sol	2022-09-29 17:22:46.662182000 -0400
+@@ -14,10 +14,10 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableMap.sol";
+ 
+ import "./BalanceAllocation.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/balances/MinimalSwapInfoPoolsBalance.sol vault/contracts/balances/MinimalSwapInfoPoolsBalance.sol
+--- vault/contracts/balances/MinimalSwapInfoPoolsBalance.sol	2022-09-29 15:52:15.826812400 -0400
++++ vault/contracts/balances/MinimalSwapInfoPoolsBalance.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+ 
+ import "./BalanceAllocation.sol";
+ import "../PoolRegistry.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/balances/TwoTokenPoolsBalance.sol vault/contracts/balances/TwoTokenPoolsBalance.sol
+--- vault/contracts/balances/TwoTokenPoolsBalance.sol	2022-09-29 15:52:15.839808400 -0400
++++ vault/contracts/balances/TwoTokenPoolsBalance.sol	2022-09-29 17:22:46.661180200 -0400
+@@ -15,8 +15,8 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+ 
+ import "./BalanceAllocation.sol";
+ import "../PoolRegistry.sol";
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockAssetTransfersHandler.sol vault/contracts/test/MockAssetTransfersHandler.sol
+--- vault/contracts/test/MockAssetTransfersHandler.sol	2022-09-29 15:52:15.873806800 -0400
++++ vault/contracts/test/MockAssetTransfersHandler.sol	2022-09-29 17:22:46.639181300 -0400
+@@ -15,9 +15,9 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ import "../AssetTransfersHandler.sol";
+ 
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockAuthenticatedContract.sol vault/contracts/test/MockAuthenticatedContract.sol
+--- vault/contracts/test/MockAuthenticatedContract.sol	2022-09-29 15:52:15.884815600 -0400
++++ vault/contracts/test/MockAuthenticatedContract.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -15,7 +15,7 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/SingletonAuthentication.sol";
++import "../../solidity-utils/contracts/helpers/SingletonAuthentication.sol";
+ 
+ /*
+  * @author Balancer Labs
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockBasicAuthorizer.sol vault/contracts/test/MockBasicAuthorizer.sol
+--- vault/contracts/test/MockBasicAuthorizer.sol	2022-09-29 15:52:15.897810000 -0400
++++ vault/contracts/test/MockBasicAuthorizer.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -15,11 +15,11 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IBasicAuthorizer.sol";
++import "../../interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
++import "../../interfaces/contracts/vault/IBasicAuthorizer.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/openzeppelin/EnumerableSet.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
+ 
+ contract MockBasicAuthorizer is IBasicAuthorizer {
+     using EnumerableSet for EnumerableSet.AddressSet;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockFlashLoanRecipient.sol vault/contracts/test/MockFlashLoanRecipient.sol
+--- vault/contracts/test/MockFlashLoanRecipient.sol	2022-09-29 15:52:15.910820800 -0400
++++ vault/contracts/test/MockFlashLoanRecipient.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -14,13 +14,13 @@
+ 
+ pragma solidity ^0.7.0;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IFlashLoanRecipient.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IFlashLoanRecipient.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/SafeERC20.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/test/TestToken.sol";
+-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
++import "../../solidity-utils/contracts/openzeppelin/SafeERC20.sol";
++import "../../solidity-utils/contracts/test/TestToken.sol";
++import "../../solidity-utils/contracts/math/Math.sol";
+ 
+ contract MockFlashLoanRecipient is IFlashLoanRecipient {
+     using Math for uint256;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockInternalBalanceRelayer.sol vault/contracts/test/MockInternalBalanceRelayer.sol
+--- vault/contracts/test/MockInternalBalanceRelayer.sol	2022-09-29 15:52:15.922808700 -0400
++++ vault/contracts/test/MockInternalBalanceRelayer.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -15,10 +15,10 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
++import "../../solidity-utils/contracts/helpers/InputHelpers.sol";
+ 
+ contract MockInternalBalanceRelayer {
+     IVault public vault;
+diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/test/MockPool.sol vault/contracts/test/MockPool.sol
+--- vault/contracts/test/MockPool.sol	2022-09-29 15:52:15.931808500 -0400
++++ vault/contracts/test/MockPool.sol	2022-09-29 17:22:46.635181700 -0400
+@@ -15,12 +15,12 @@
+ pragma solidity ^0.7.0;
+ pragma experimental ABIEncoderV2;
+ 
+-import "@balancer-labs/v2-interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IVault.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IGeneralPool.sol";
+-import "@balancer-labs/v2-interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
++import "../../interfaces/contracts/solidity-utils/openzeppelin/IERC20.sol";
++import "../../interfaces/contracts/vault/IVault.sol";
++import "../../interfaces/contracts/vault/IGeneralPool.sol";
++import "../../interfaces/contracts/vault/IMinimalSwapInfoPool.sol";
+ 
+-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
++import "../../solidity-utils/contracts/math/FixedPoint.sol";
+ 
+ contract MockPool is IGeneralPool, IMinimalSwapInfoPool {
+     using FixedPoint for uint256;
