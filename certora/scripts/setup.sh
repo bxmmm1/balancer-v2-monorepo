@@ -9,13 +9,13 @@ certoraRun certora/harness/ProtocolFeeSplitterHarness.sol \
     certora/munged/vault/contracts/ProtocolFeesCollector.sol \
     --verify ProtocolFeeSplitterHarness:certora/specs/setup.spec \
     $RULE \
-    --solc solc7.3 \
     --optimistic_loop \
     --send_only \
     --staging \
     --rule_sanity \
     --packages @balancer-labs=$(pwd)/node_modules/@balancer-labs/ \
     --msg "ProtocolFeeSplitterHarness:setup.spec $1 " 
+    # --solc solc7.3 \
     # --settings -useBitVectorTheory \
     # certora/munged/vault/contracts/ProtocolFeesCollector.sol \
     
