@@ -26,9 +26,10 @@ methods{
     withdrawCollectedFees(address[],uint256[],address) => DISPATCHER(true)
 }
 
-invariant UniquePools(bytes32 poolId0, bytes32 poolId1)
-    poolId0 != poolId1 <=> getBpt(poolId0) != getBpt(poolId1)
-
+// I think that we don't need to test for this, as this is not our responsibility
+// This is part of the Balancer's existing codebase
+// invariant UniquePools(bytes32 poolId0, bytes32 poolId1)
+//     poolId0 != poolId1 <=> getBpt(poolId0) != getBpt(poolId1)
 
 rule SetRevenueSharingFeePercentageCorrectly() {
     env e;
@@ -88,21 +89,17 @@ rule CollectFeesTotal() {
     uint256 treasuryBalance_ = getBalance(poolId, treasuryAddr);
     uint256 beneficiaryBalance_ = getBalance(poolId, beneficiaryAddr);
     uint256 totalSupply_ = getTotalSupply(poolId);
+    uint256 feeCollectorBptBalance_ = getFeeCollectorBptBalance(poolId);
 
-    assert feeCollectorBptBalance==0 => !successful;
+    assert feeCollectorBptBalance ==0 => !successful;
     if (successful) {
-        assert getBeneficiary(poolId) == 0 => _beneficiaryBalance ==  beneficiaryBalance_;    
-        assert feePercentage == 0 => beneficiaryBalance_ == _beneficiaryBalance;
+        // In case of no beneficiary for a pool and no fee percentage defined, everything should go to treasury
+        assert getBeneficiary(poolId) == 0 => _beneficiaryBalance == beneficiaryBalance_ && treasuryBalance_ == _treasuryBalance + feeCollectorBptBalance;    
+        assert feePercentage == 0 => beneficiaryBalance_ == _beneficiaryBalance && treasuryBalance_ == _treasuryBalance + feeCollectorBptBalance;
+        // If fee percentage, beneficiary and treasury are defined and fee collector has at least 1 token, both treasury and beneficiary should get some tokens
+        assert feePercentage > getMinRevenueSharingFeePercentage() && feePercentage <= getMaxRevenueSharingFeePercentage() && getBeneficiary(poolId) != 0 && feeCollectorBptBalance > 1000000000000000000 => beneficiaryBalance_ > _beneficiaryBalance && treasuryBalance_ > _treasuryBalance;
         assert feeCollectorBptBalance == (treasuryBalance_ - _treasuryBalance) + (beneficiaryBalance_ - _beneficiaryBalance);
         assert totalSupply_ == _totalSupply;
     } else 
         assert true;
-}
-
-rule sanity(method f)
-{
-	env e;
-	calldataarg args;
-	f(e,args);
-	assert false;
 }
