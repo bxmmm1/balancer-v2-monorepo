@@ -61,4 +61,16 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
     uint256 poolFeeOverride = poolSettings[poolId].revenueSharePercentageOverride;
     feePercentage = poolFeeOverride != 0 ? poolFeeOverride : defaultRevenueSharingFeePercentage;
   }
+  
+  function getActionId(uint32 selector) public returns (bytes32) {
+    return getActionId(bytes4(selector));
+  }
+
+  mapping(bytes32 => mapping(address => bool)) public canPerformMapping;
+  function _canPerform(bytes32 actionId, address account) internal view override returns (bool) {
+    return canPerformMapping[actionId][account];
+  }
+  function canPerform(bytes32 actionId, address account) public view returns (bool) {
+    return _canPerform(actionId, account);
+  }
 }

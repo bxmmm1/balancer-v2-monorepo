@@ -11,10 +11,10 @@ certoraRun certora/harness/ProtocolFeeSplitterHarness.sol \
     $RULE \
     --optimistic_loop \
     --send_only \
-    --staging \
+    --staging eyalf/display-storage-in-calltrace \
     --rule_sanity \
     --packages @balancer-labs=$(pwd)/node_modules/@balancer-labs/ \
-    --msg "ProtocolFeeSplitterHarness:setup.spec $1 " 
+    --msg "ProtocolFeeSplitterHarness:setup.spec $1 "
     # --solc solc7.3 \
     # --settings -useBitVectorTheory \
     # certora/munged/vault/contracts/ProtocolFeesCollector.sol \
