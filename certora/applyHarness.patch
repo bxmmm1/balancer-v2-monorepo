@@ -1802,7 +1802,7 @@ diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance
      using SafeCast for uint256;
 diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeeSplitter.sol standalone-utils/contracts/ProtocolFeeSplitter.sol
 --- standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-29 15:53:21.255883800 -0400
-+++ standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-09-29 21:13:09.612029500 -0400
++++ standalone-utils/contracts/ProtocolFeeSplitter.sol	2022-10-04 14:35:03.951480100 -0400
 @@ -15,12 +15,17 @@
  pragma solidity ^0.7.0;
  pragma experimental ABIEncoderV2;
@@ -1839,6 +1839,15 @@ diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance
 +    address public constant _DELEGATE_OWNER = 0xBA1BA1ba1BA1bA1bA1Ba1BA1ba1BA1bA1ba1ba1B;
  
      IProtocolFeesCollector public immutable protocolFeesCollector;
+ 
+@@ -142,7 +147,7 @@
+         treasuryAmount = feeCollectorBptBalance.sub(ownerAmount);
+     }
+ 
+-    function _canPerform(bytes32 actionId, address account) internal view override returns (bool) {
++    function _canPerform(bytes32 actionId, address account) internal view override virtual returns (bool) {
+         return _getAuthorizer().canPerform(actionId, account, address(this));
+     }
  
 diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' standalone-utils/contracts/ProtocolFeesWithdrawer.sol standalone-utils/contracts/ProtocolFeesWithdrawer.sol
 --- standalone-utils/contracts/ProtocolFeesWithdrawer.sol	2022-09-29 15:52:15.047164400 -0400
@@ -2281,7 +2290,7 @@ diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance
  import "./PoolRegistry.sol";
 diff -ruN '--exclude=node_modules' '--exclude=deployments' '--exclude=governance-scripts' vault/contracts/ProtocolFeesCollector.sol vault/contracts/ProtocolFeesCollector.sol
 --- vault/contracts/ProtocolFeesCollector.sol	2022-09-29 15:52:15.660809900 -0400
-+++ vault/contracts/ProtocolFeesCollector.sol	2022-09-29 17:22:46.660187300 -0400
++++ vault/contracts/ProtocolFeesCollector.sol	2022-10-04 14:43:51.473758700 -0400
 @@ -15,12 +15,12 @@
  pragma solidity ^0.7.0;
  pragma experimental ABIEncoderV2;

@@ -98,7 +98,7 @@ function setup(address treasury, address beneficiary) {
 }
 
 /// @title: CollectFeesTotal
-/// @notice: collectFees(bytes32 poolId) should check if there is any fees balance to be collected. If not, it should revert, otherwise it should split the fees between beneficiary of the given pool and treasury. If beneficiary is not set, all fees go to treasury. All collecting fees should not change the total supply of the pool token
+/// @notice: collectFees(bytes32 poolId) should check if there is any fees balance to be collected. If not, it should revert, otherwise it should split the fees between beneficiary of the given pool and treasury. If beneficiary is not set, all fees go to treasury. Collecting fees should not change the total supply of the pool token
 /// @notice: SUCCESS
 rule CollectFeesTotal() {
     env e;    
