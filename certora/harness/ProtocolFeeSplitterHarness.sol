@@ -70,6 +70,7 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
   function _canPerform(bytes32 actionId, address account) internal view override returns (bool) {
     return canPerformMapping[actionId][account];
   }
+  
   function canPerform(bytes32 actionId, address account) public view returns (bool) {
     return _canPerform(actionId, account);
   }
