@@ -28,6 +28,21 @@ methods{
     withdrawCollectedFees(address[],uint256[],address) => DISPATCHER(true)
 }
 
+/// @title: RevenueSharingFeePercentageInRange
+/// @notice: RevenueSharingFeePercentageInRange(bytes32 poolId) checks revenueSharePercentageOverride of a given pool is always between _MIN_REVENUE_SHARING_FEE_PERCENTAGE and _MAX_REVENUE_SHARING_FEE_PERCENTAGE. . 
+/// @notice: SUCCESS
+invariant RevenueSharingFeePercentageInRange(bytes32 poolId)
+    getRevenueSharePercentageOverride(poolId) == 0 || 
+    (getRevenueSharePercentageOverride(poolId) >= getMinRevenueSharingFeePercentage() &&
+    getRevenueSharePercentageOverride(poolId) <= getMaxRevenueSharingFeePercentage())
+
+/// @title: DefaultRevenueSharingFeePercentageInRange
+/// @notice: DefaultRevenueSharingFeePercentageInRange() checks the defaultRevenueSharingFeePercentage is always between 0 and _MAX_REVENUE_SHARING_FEE_PERCENTAGE. 
+/// @notice: SUCCESS
+invariant DefaultRevenueSharingFeePercentageInRange()
+    defaultRevenueSharingFeePercentage() >= 0 && 
+    defaultRevenueSharingFeePercentage() <= getMaxRevenueSharingFeePercentage()
+
 /// @title: SetRevenueSharingFeePercentageCorrectly
 /// @notice: setRevenueSharingFeePercentage(bytes32 poolId, uint256 newSwapFeePercentage) should check the caller is authenticated and newSwapFeePercentage is within range. If not, it should revert, otherwise set revenueSharePercentageOverride correctly for the given poolId. 
 /// @notice: SUCCESS
@@ -36,13 +51,10 @@ rule SetRevenueSharingFeePercentageCorrectly() {
     bytes32 poolId;
     uint256 newSwapFeePercentage; 
 
-    // requireInvariant RevenueSharingFeePercentageInRange(newSwapFeePercentage); 
     setRevenueSharingFeePercentage@withrevert(e, poolId, newSwapFeePercentage);
     bool successful = !lastReverted;
   
     assert canPerform(e, getActionId(setRevenueSharingFeePercentage(bytes32,uint256).selector), e.msg.sender)==false => !successful;    
-    assert(newSwapFeePercentage<getMinRevenueSharingFeePercentage() => !successful);
-    assert(newSwapFeePercentage>getMaxRevenueSharingFeePercentage() => !successful);
     assert(successful => toUint96(newSwapFeePercentage)==getRevenueSharePercentageOverride(poolId));
 }
 
@@ -52,13 +64,11 @@ rule SetRevenueSharingFeePercentageCorrectly() {
 rule SetDefaultRevenueSharingFeePercentageCorrectly() {
     env e;
     uint256 defaultSwapFeePercentage; 
-    // requireInvariant DefaultRevenueSharingFeePercentage(defaultSwapFeePercentage); 
 
     setDefaultRevenueSharingFeePercentage@withrevert(e, defaultSwapFeePercentage);
     bool successful = !lastReverted;
 
     assert canPerform(e, getActionId(setDefaultRevenueSharingFeePercentage(uint256).selector), e.msg.sender)==false => !successful;    
-    assert(defaultSwapFeePercentage>getMaxRevenueSharingFeePercentage() => !successful);
     assert(successful => toUint96(defaultSwapFeePercentage)==defaultRevenueSharingFeePercentage());
 }
 
@@ -78,10 +88,12 @@ rule SetPoolBeneficiaryCorrectly() {
     assert(successful => newBeneficiary==getBeneficiary(poolId));
 }
 
-function setup(address treasury, address beneficiary) {
+function setup(bytes32 poolId, address treasury, address beneficiary) {
     require treasury != beneficiary;
     require treasury != protocolFeesCollector();
     require beneficiary != protocolFeesCollector();
+    requireInvariant RevenueSharingFeePercentageInRange(poolId); 
+    requireInvariant DefaultRevenueSharingFeePercentageInRange(); 
 }
 
 /// @title: CollectFeesRevertCondition
@@ -95,7 +107,7 @@ rule CollectFeesRevertCondition() {
     address treasuryAddr = treasury();
     address beneficiaryAddr = getBeneficiary(poolId);
 
-    setup(treasuryAddr, beneficiaryAddr);
+    setup(poolId, treasuryAddr, beneficiaryAddr);
 
     collectFees@withrevert(e, poolId);
     bool successful = !lastReverted;
@@ -105,7 +117,7 @@ rule CollectFeesRevertCondition() {
 
 
 /// @title: CollectFeesIntegrity
-/// @notice: collectFees(bytes32 poolId) should split the feeCollectorBptBalance amont properly between the beneficiary of the pool and the treasury. If beneficiary is not set, all fees go to treasury. Collecting fees should not change the total supply of the pool token.
+/// @notice: collectFees(bytes32 poolId) should split the feeCollectorBptBalance amount properly between the beneficiary of the pool and the treasury. If beneficiary is not set, all fees go to treasury. Collecting fees should not change the total supply of the pool token.
 /// @notice: SUCCESS
 rule CollectFeesIntegrity() {
     env e;    
@@ -119,7 +131,7 @@ rule CollectFeesIntegrity() {
     uint256 _beneficiaryBalance = getBalance(poolId, beneficiaryAddr);
     uint256 _totalSupply = getTotalSupply(poolId);
 
-    setup(treasuryAddr, beneficiaryAddr);
+    setup(poolId, treasuryAddr, beneficiaryAddr);
 
     collectFees(e, poolId);
 
@@ -144,7 +156,7 @@ rule ZeroFeeCollectorBptBalanceAfterCollectFee() {
     env e;    
     bytes32 poolId;
 
-    setup(treasury(), getBeneficiary(poolId));
+    setup(poolId, treasury(), getBeneficiary(poolId));
     collectFees(e, poolId);
     
     uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
