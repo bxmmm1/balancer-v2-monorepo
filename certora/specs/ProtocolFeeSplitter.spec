@@ -28,23 +28,23 @@ methods{
     withdrawCollectedFees(address[],uint256[],address) => DISPATCHER(true)
 }
 
-/// @title: RevenueSharingFeePercentageInRange
-/// @notice: RevenueSharingFeePercentageInRange(bytes32 poolId) checks revenueSharePercentageOverride of a given pool is always between _MIN_REVENUE_SHARING_FEE_PERCENTAGE and _MAX_REVENUE_SHARING_FEE_PERCENTAGE. . 
+/// @title: `RevenueSharingFeePercentageInRange`
+/// @notice: `RevenueSharingFeePercentageInRange(bytes32 poolId)` checks `revenueSharePercentageOverride` of the given `poolId` is always between `_MIN_REVENUE_SHARING_FEE_PERCENTAGE` and `_MAX_REVENUE_SHARING_FEE_PERCENTAGE`.
 /// @notice: SUCCESS
 invariant RevenueSharingFeePercentageInRange(bytes32 poolId)
     getRevenueSharePercentageOverride(poolId) == 0 || 
     (getRevenueSharePercentageOverride(poolId) >= getMinRevenueSharingFeePercentage() &&
     getRevenueSharePercentageOverride(poolId) <= getMaxRevenueSharingFeePercentage())
 
-/// @title: DefaultRevenueSharingFeePercentageInRange
-/// @notice: DefaultRevenueSharingFeePercentageInRange() checks the defaultRevenueSharingFeePercentage is always between 0 and _MAX_REVENUE_SHARING_FEE_PERCENTAGE. 
+/// @title: `DefaultRevenueSharingFeePercentageInRange`
+/// @notice: `DefaultRevenueSharingFeePercentageInRange()` checks `DefaultRevenueSharingFeePercentageInRange` is always between `0` and `_MAX_REVENUE_SHARING_FEE_PERCENTAGE`. 
 /// @notice: SUCCESS
 invariant DefaultRevenueSharingFeePercentageInRange()
     defaultRevenueSharingFeePercentage() >= 0 && 
     defaultRevenueSharingFeePercentage() <= getMaxRevenueSharingFeePercentage()
 
-/// @title: SetRevenueSharingFeePercentageCorrectly
-/// @notice: setRevenueSharingFeePercentage(bytes32 poolId, uint256 newSwapFeePercentage) should check the caller is authenticated and newSwapFeePercentage is within range. If not, it should revert, otherwise set revenueSharePercentageOverride correctly for the given poolId. 
+/// @title: `SetRevenueSharingFeePercentageCorrectly`
+/// @notice: `setRevenueSharingFeePercentage(bytes32 poolId, uint256 newSwapFeePercentage)` reverts if the caller is not authenticated or `newSwapFeePercentage` is out-of-range,  otherwise it set `revenueSharePercentageOverride` for the given `poolId`. 
 /// @notice: SUCCESS
 rule SetRevenueSharingFeePercentageCorrectly() {
     env e;
@@ -58,8 +58,8 @@ rule SetRevenueSharingFeePercentageCorrectly() {
     assert(successful => toUint96(newSwapFeePercentage)==getRevenueSharePercentageOverride(poolId));
 }
 
-/// @title: SetDefaultRevenueSharingFeePercentageCorrectly
-/// @notice: setDefaultRevenueSharingFeePercentage(uint256 feePercentage) should check the caller is authenticated and input is within range. If not, it should revert, otherwise set defaultRevenueSharingFeePercentage correctly.
+/// @title: `SetDefaultRevenueSharingFeePercentageCorrectly`
+/// @notice: `setDefaultRevenueSharingFeePercentage(uint256 feePercentage)` revers if the caller is not authenticated or input is out-of-range. Otherwise it sets `defaultRevenueSharingFeePercentage`.
 /// @notice: SUCCESS
 rule SetDefaultRevenueSharingFeePercentageCorrectly() {
     env e;
@@ -72,8 +72,8 @@ rule SetDefaultRevenueSharingFeePercentageCorrectly() {
     assert(successful => toUint96(defaultSwapFeePercentage)==defaultRevenueSharingFeePercentage());
 }
 
-/// @title: SetPoolBeneficiaryCorrectly
-/// @notice: setPoolBeneficiary(bytes32 poolId, address newBeneficiary) should check if the msg.sender is the pool owner with the specified poolId. If not, it should revert, otherwise set beneficiary correctly for the poolId.
+/// @title: `SetPoolBeneficiaryCorrectly`
+/// @notice: `setPoolBeneficiary(bytes32 poolId, address newBeneficiary)` reverts if the `msg.sender` is not the pool owner for the specified `poolId`, otherwise it sets `beneficiary` for the `poolId`. 
 /// @notice: SUCCESS
 rule SetPoolBeneficiaryCorrectly() {
     env e;
@@ -96,8 +96,8 @@ function setup(bytes32 poolId, address treasury, address beneficiary) {
     requireInvariant DefaultRevenueSharingFeePercentageInRange(); 
 }
 
-/// @title: CollectFeesRevertCondition
-/// @notice: collectFees(bytes32 poolId) should revert when there are no fees to be collected.
+/// @title: `CollectFeesRevertCondition`
+/// @notice: `collectFees(bytes32 poolId)` reverts when there are no fees to be collected.
 /// @notice: SUCCESS
 rule CollectFeesRevertCondition() {
     env e;    
@@ -116,8 +116,8 @@ rule CollectFeesRevertCondition() {
 }
 
 
-/// @title: CollectFeesIntegrity
-/// @notice: collectFees(bytes32 poolId) should split the feeCollectorBptBalance amount properly between the beneficiary of the pool and the treasury. If beneficiary is not set, all fees go to treasury. Collecting fees should not change the total supply of the pool token.
+/// @title: `CollectFeesIntegrity`
+/// @notice: `collectFees(bytes32 poolId)` splits `feeCollectorBptBalance` between the `beneficiary` of the pool and the `treasury`. If `beneficiary` is not set, all fees go to `treasury`. Collecting fees does not change the total supply of the pool token.
 /// @notice: SUCCESS
 rule CollectFeesIntegrity() {
     env e;    
@@ -149,8 +149,8 @@ rule CollectFeesIntegrity() {
     assert totalSupply_ == _totalSupply;
 }
 
-/// @title: ZeroFeeCollectorBptBalanceAfterCollectFee
-/// @notice: After collectFees(bytes32 poolId) is called successfully, there should be no fees balance remaining.
+/// @title: `ZeroFeeCollectorBptBalanceAfterCollectFee`
+/// @notice: `collectFees(bytes32 poolId)` is called successfully, there are be no fees balance remaining.
 /// @notice: SUCCESS
 rule ZeroFeeCollectorBptBalanceAfterCollectFee() {
     env e;    
@@ -163,8 +163,8 @@ rule ZeroFeeCollectorBptBalanceAfterCollectFee() {
     assert feeCollectorBptBalance == 0;
 }
 
-/// @title: FeeCollectorBptBalanceShouldNotChange
-/// @notice: No functions other than collectFees(bytes32 poolId) should change the fees balance.
+/// @title: `FeeCollectorBptBalanceShouldNotChange`
+/// @notice: No functions other than `collectFees(bytes32 poolId)` change the fees balance.
 /// @notice: SUCCESS
 rule FeeCollectorBptBalanceShouldNotChange(method f) filtered { f -> 
     f.selector !=  collectFees(bytes32).selector
