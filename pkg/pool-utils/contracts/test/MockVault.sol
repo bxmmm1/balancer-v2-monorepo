@@ -36,14 +36,20 @@ contract MockVault is IPoolSwapStructs {
 
     mapping(bytes32 => Pool) private pools;
 
-    event Swap(bytes32 indexed poolId, IERC20 indexed tokenIn, IERC20 indexed tokenOut, uint256 amount);
+    event Swap(
+        bytes32 indexed poolId,
+        IERC20 indexed tokenIn,
+        IERC20 indexed tokenOut,
+        uint256 amountIn,
+        uint256 amountOut
+    );
 
     event PoolBalanceChanged(
         bytes32 indexed poolId,
         address indexed liquidityProvider,
         IERC20[] tokens,
         int256[] deltas,
-        uint256[] protocolFees
+        uint256[] protocolFeeAmounts
     );
 
     constructor(IAuthorizer authorizer) {
@@ -68,6 +74,20 @@ contract MockVault is IPoolSwapStructs {
             tokens[i] = pool.tokens[i];
             balances[i] = pool.balances[tokens[i]];
         }
+    }
+
+    function getPoolTokenInfo(bytes32 poolId, IERC20 token)
+        external
+        view
+        returns (
+            uint256 cash,
+            uint256,
+            uint256,
+            address
+        )
+    {
+        Pool storage pool = pools[poolId];
+        cash = pool.balances[token];
     }
 
     function registerPool(IVault.PoolSpecialization) external view returns (bytes32) {
@@ -98,8 +118,11 @@ contract MockVault is IPoolSwapStructs {
         uint256 balanceTokenIn,
         uint256 balanceTokenOut
     ) external {
-        uint256 amount = IMinimalSwapInfoPool(pool).onSwap(request, balanceTokenIn, balanceTokenOut);
-        emit Swap(request.poolId, request.tokenIn, request.tokenOut, amount);
+        uint256 amountCalculated = IMinimalSwapInfoPool(pool).onSwap(request, balanceTokenIn, balanceTokenOut);
+        (uint256 amountIn, uint256 amountOut) = request.kind == IVault.SwapKind.GIVEN_IN
+            ? (request.amount, amountCalculated)
+            : (amountCalculated, request.amount);
+        emit Swap(request.poolId, request.tokenIn, request.tokenOut, amountIn, amountOut);
     }
 
     function callGeneralPoolSwap(
@@ -109,8 +132,11 @@ contract MockVault is IPoolSwapStructs {
         uint256 indexIn,
         uint256 indexOut
     ) external {
-        uint256 amount = IGeneralPool(pool).onSwap(request, balances, indexIn, indexOut);
-        emit Swap(request.poolId, request.tokenIn, request.tokenOut, amount);
+        uint256 amountCalculated = IGeneralPool(pool).onSwap(request, balances, indexIn, indexOut);
+        (uint256 amountIn, uint256 amountOut) = request.kind == IVault.SwapKind.GIVEN_IN
+            ? (request.amount, amountCalculated)
+            : (amountCalculated, request.amount);
+        emit Swap(request.poolId, request.tokenIn, request.tokenOut, amountIn, amountOut);
     }
 
     function callJoinPool(

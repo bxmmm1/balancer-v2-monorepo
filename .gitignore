@@ -22,5 +22,8 @@ cache/
 dist/
 pkg/balancer-js/src/typechain/*
 
+# Forge
+forge-artifacts/
+forge-cache/
 .certora_internal/
 certora/

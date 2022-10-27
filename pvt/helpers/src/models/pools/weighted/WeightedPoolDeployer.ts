@@ -17,6 +17,7 @@ import {
 } from './types';
 import { ZERO_ADDRESS } from '@balancer-labs/v2-helpers/src/constants';
 import { DAY } from '@balancer-labs/v2-helpers/src/time';
+import { ProtocolFee } from '../../vault/types';
 
 const NAME = 'Balancer Pool Token';
 const SYMBOL = 'BPT';
@@ -31,13 +32,12 @@ export default {
     const {
       tokens,
       weights,
+      rateProviders,
       assetManagers,
       swapFeePercentage,
       poolType,
       swapEnabledOnStart,
       mustAllowlistLPs,
-      protocolSwapFeePercentage,
-      managementSwapFeePercentage,
       managementAumFeePercentage,
       aumProtocolFeesCollector,
     } = deployment;
@@ -48,13 +48,12 @@ export default {
       vault,
       tokens,
       weights,
+      TypesConverter.toAddresses(rateProviders),
       assetManagers,
       swapFeePercentage,
       poolType,
       swapEnabledOnStart,
       mustAllowlistLPs,
-      protocolSwapFeePercentage,
-      managementSwapFeePercentage,
       managementAumFeePercentage,
       aumProtocolFeesCollector
     );
@@ -64,6 +63,7 @@ export default {
     const {
       tokens,
       weights,
+      rateProviders,
       assetManagers,
       swapFeePercentage,
       pauseWindowDuration,
@@ -71,12 +71,12 @@ export default {
       poolType,
       swapEnabledOnStart,
       mustAllowlistLPs,
-      protocolSwapFeePercentage,
-      managementSwapFeePercentage,
       managementAumFeePercentage,
       aumProtocolFeesCollector,
       owner,
       from,
+      aumFeeId,
+      mockContractName,
     } = params;
 
     let result: Promise<Contract>;
@@ -101,6 +101,9 @@ export default {
         break;
       }
       case WeightedPoolType.MANAGED_POOL: {
+        const addRemoveTokenLib = await deploy('v2-pool-weighted/ManagedPoolAddRemoveTokenLib');
+        const math = await deploy('v2-pool-weighted/ExternalWeightedMath');
+        const circuitBreakerLib = await deploy('v2-pool-weighted/CircuitBreakerLib');
         result = deploy('v2-pool-weighted/ManagedPool', {
           args: [
             {
@@ -112,30 +115,77 @@ export default {
               assetManagers: assetManagers,
               swapEnabledOnStart: swapEnabledOnStart,
               mustAllowlistLPs: mustAllowlistLPs,
-              protocolSwapFeePercentage: protocolSwapFeePercentage,
-              managementSwapFeePercentage: managementSwapFeePercentage,
               managementAumFeePercentage: managementAumFeePercentage,
               aumProtocolFeesCollector: aumProtocolFeesCollector,
+              aumFeeId: aumFeeId,
             },
             vault.address,
+            vault.protocolFeesProvider.address,
+            math.address,
             owner,
             pauseWindowDuration,
             bufferPeriodDuration,
           ],
           from,
+          libraries: {
+            CircuitBreakerLib: circuitBreakerLib.address,
+            ManagedPoolAddRemoveTokenLib: addRemoveTokenLib.address,
+          },
+        });
+        break;
+      }
+      case WeightedPoolType.MOCK_MANAGED_POOL: {
+        if (mockContractName == undefined) {
+          throw new Error('Mock contract name required to deploy mock base pool');
+        }
+        const addRemoveTokenLib = await deploy('v2-pool-weighted/ManagedPoolAddRemoveTokenLib');
+
+        const math = await deploy('v2-pool-weighted/ExternalWeightedMath');
+        const circuitBreakerLib = await deploy('v2-pool-weighted/CircuitBreakerLib');
+        result = deploy(mockContractName, {
+          args: [
+            {
+              name: NAME,
+              symbol: SYMBOL,
+              tokens: tokens.addresses,
+              normalizedWeights: weights,
+              swapFeePercentage: swapFeePercentage,
+              assetManagers: assetManagers,
+              swapEnabledOnStart: swapEnabledOnStart,
+              mustAllowlistLPs: mustAllowlistLPs,
+              managementAumFeePercentage: managementAumFeePercentage,
+              aumProtocolFeesCollector: aumProtocolFeesCollector,
+              aumFeeId: aumFeeId,
+            },
+            vault.address,
+            vault.protocolFeesProvider.address,
+            math.address,
+            owner,
+            pauseWindowDuration,
+            bufferPeriodDuration,
+          ],
+          from,
+          libraries: {
+            CircuitBreakerLib: circuitBreakerLib.address,
+            ManagedPoolAddRemoveTokenLib: addRemoveTokenLib.address,
+          },
         });
         break;
       }
       default: {
         result = deploy('v2-pool-weighted/WeightedPool', {
           args: [
+            {
+              name: NAME,
+              symbol: SYMBOL,
+              tokens: tokens.addresses,
+              normalizedWeights: weights,
+              rateProviders: rateProviders,
+              assetManagers: assetManagers,
+              swapFeePercentage: swapFeePercentage,
+            },
             vault.address,
-            NAME,
-            SYMBOL,
-            tokens.addresses,
-            weights,
-            assetManagers,
-            swapFeePercentage,
+            vault.protocolFeesProvider.address,
             pauseWindowDuration,
             bufferPeriodDuration,
             owner,
@@ -149,20 +199,20 @@ export default {
   },
 
   async _deployFromFactory(params: WeightedPoolDeployment, vault: Vault): Promise<Contract> {
+    // Note that we only support asset managers with the standalone deploy method.
     const {
       tokens,
       weights,
+      rateProviders,
       assetManagers,
       swapFeePercentage,
       swapEnabledOnStart,
       mustAllowlistLPs,
-      protocolSwapFeePercentage,
-      managementSwapFeePercentage,
       managementAumFeePercentage,
-      aumProtocolFeesCollector,
       poolType,
       owner,
       from,
+      aumFeeId,
     } = params;
 
     let result: Promise<Contract>;
@@ -170,7 +220,7 @@ export default {
     switch (poolType) {
       case WeightedPoolType.LIQUIDITY_BOOTSTRAPPING_POOL: {
         const factory = await deploy('v2-pool-weighted/LiquidityBootstrappingPoolFactory', {
-          args: [vault.address],
+          args: [vault.address, vault.getFeesProvider().address],
           from,
         });
         const tx = await factory.create(
@@ -188,13 +238,19 @@ export default {
         break;
       }
       case WeightedPoolType.MANAGED_POOL: {
-        const baseFactory = await deploy('v2-pool-weighted/BaseManagedPoolFactory', {
-          args: [vault.address],
+        const addRemoveTokenLib = await deploy('v2-pool-weighted/ManagedPoolAddRemoveTokenLib');
+        const circuitBreakerLib = await deploy('v2-pool-weighted/CircuitBreakerLib');
+        const factory = await deploy('v2-pool-weighted/ManagedPoolFactory', {
+          args: [vault.address, vault.getFeesProvider().address],
           from,
+          libraries: {
+            CircuitBreakerLib: circuitBreakerLib.address,
+            ManagedPoolAddRemoveTokenLib: addRemoveTokenLib.address,
+          },
         });
 
-        const factory = await deploy('v2-pool-weighted/ManagedPoolFactory', {
-          args: [baseFactory.address],
+        const controlledFactory = await deploy('v2-pool-weighted/ControlledManagedPoolFactory', {
+          args: [factory.address],
           from,
         });
 
@@ -203,14 +259,12 @@ export default {
           symbol: SYMBOL,
           tokens: tokens.addresses,
           normalizedWeights: weights,
-          assetManagers: Array(tokens.length).fill(ZERO_ADDRESS),
+          assetManagers,
           swapFeePercentage: swapFeePercentage,
           swapEnabledOnStart: swapEnabledOnStart,
           mustAllowlistLPs: mustAllowlistLPs,
-          protocolSwapFeePercentage: protocolSwapFeePercentage,
-          managementSwapFeePercentage: managementSwapFeePercentage,
           managementAumFeePercentage: managementAumFeePercentage,
-          aumProtocolFeesCollector: aumProtocolFeesCollector,
+          aumFeeId: aumFeeId ?? ProtocolFee.AUM,
         };
 
         const basePoolRights: BasePoolRights = {
@@ -228,7 +282,7 @@ export default {
           canChangeMgmtFees: true,
         };
 
-        const tx = await factory
+        const tx = await controlledFactory
           .connect(from || ZERO_ADDRESS)
           .create(newPoolParams, basePoolRights, managedPoolRights, DAY, from?.address || ZERO_ADDRESS);
         const receipt = await tx.wait();
@@ -236,14 +290,20 @@ export default {
         result = deployedAt('v2-pool-weighted/ManagedPool', event.args.pool);
         break;
       }
+      case WeightedPoolType.MOCK_MANAGED_POOL: {
+        throw new Error('Mock type not supported to deploy from factory');
+      }
       default: {
-        const factory = await deploy('v2-pool-weighted/WeightedPoolFactory', { args: [vault.address], from });
+        const factory = await deploy('v2-pool-weighted/WeightedPoolFactory', {
+          args: [vault.address, vault.getFeesProvider().address],
+          from,
+        });
         const tx = await factory.create(
           NAME,
           SYMBOL,
           tokens.addresses,
           weights,
-          assetManagers,
+          rateProviders,
           swapFeePercentage,
           owner
         );

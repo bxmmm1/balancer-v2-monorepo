@@ -15,11 +15,54 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-contract MockLiquidityGauge {
+import "@balancer-labs/v2-interfaces/contracts/liquidity-mining/ILiquidityGauge.sol";
+import "@balancer-labs/v2-interfaces/contracts/solidity-utils/helpers/BalancerErrors.sol";
+
+contract MockLiquidityGauge is ILiquidityGauge {
     // solhint-disable-next-line var-name-mixedcase
     address public lp_token;
 
-    constructor(address pool) {
+    constructor() {
+        // solhint-disable-previous-line no-empty-blocks
+    }
+
+    function initialize(address pool, uint256) external {
         lp_token = pool;
+    }
+
+    // Methods below are not implemented; they are present just to comply with ILiquidityGauge.
+    // State mutability was set to "pure" to avoid compiler warnings.
+    // solhint-disable func-name-mixedcase
+
+    function integrate_fraction(address) external pure override returns (uint256) {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function user_checkpoint(address) external pure override returns (bool) {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function is_killed() external pure override returns (bool) {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function killGauge() external pure override {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function unkillGauge() external pure override {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function setRelativeWeightCap(uint256) external pure override {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function getRelativeWeightCap() external pure override returns (uint256) {
+        _revert(Errors.UNIMPLEMENTED);
+    }
+
+    function getCappedRelativeWeight(uint256) external pure override returns (uint256) {
+        _revert(Errors.UNIMPLEMENTED);
     }
 }
