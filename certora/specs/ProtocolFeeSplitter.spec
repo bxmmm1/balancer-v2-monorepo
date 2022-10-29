@@ -4,28 +4,29 @@ methods{
     setRevenueSharingFeePercentage(bytes32,uint256)
     setDefaultRevenueSharingFeePercentage(uint256)
     setPoolBeneficiary(bytes32, address)
+    getAmounts(bytes32) returns(uint256,uint256)
     collectFees(bytes32)
-    treasury() returns(address) envfree    
-    toPoolAddress(bytes32) returns(address) => DISPATCHER(true)
+    getOwner() returns(address) => DISPATCHER(true) 
     getBpt(bytes32) returns(address) envfree
     getBptOwner(bytes32) returns(address) envfree
-    getOwner() returns(address) => PER_CALLEE_CONSTANT 
     getBeneficiary(bytes32) returns(address) envfree
     getRevenueSharePercentageOverride(bytes32) returns(uint256) envfree
-    protocolFeesCollector() returns(address) envfree
-    defaultRevenueSharingFeePercentage() returns(uint256) envfree
-    getMinRevenueSharingFeePercentage() returns(uint256) envfree
+    getDefaultRevenueSharingFeePercentage() returns(uint256) envfree
     getMaxRevenueSharingFeePercentage() returns(uint256) envfree
     canPerform(bytes32 actionId, address account) returns (bool)
-    getDelegateOwner() returns(address) envfree
     toUint96(uint256) returns(uint96) envfree
     getBalance(bytes32,address) returns(uint256) envfree
     getTotalSupply(bytes32) returns(uint256) envfree
     getFeeCollectorBptBalance(bytes32) returns(uint256) envfree
     getFeePercentage(bytes32) returns(uint256) envfree
     getActionId(uint32) returns(bytes32) envfree
+    getTreasury() returns(address) envfree    
+    getProtocolFeesWithdrawer() returns(address) envfree    
 
-    withdrawCollectedFees(address[],uint256[],address) => DISPATCHER(true)
+    withdrawCollectedFees(address[],uint256[],address) envfree
+    getVault() returns(address) => AUTO
+    getPool(bytes32) returns(address) => DISPATCHER(true)
+    getProtocolFeesCollectorOnHarness() returns(address) envfree
 }
 
 /// @title: `RevenueSharingFeePercentageInRange`
@@ -33,15 +34,14 @@ methods{
 /// @notice: SUCCESS
 invariant RevenueSharingFeePercentageInRange(bytes32 poolId)
     getRevenueSharePercentageOverride(poolId) == 0 || 
-    (getRevenueSharePercentageOverride(poolId) >= getMinRevenueSharingFeePercentage() &&
-    getRevenueSharePercentageOverride(poolId) <= getMaxRevenueSharingFeePercentage())
+    (getRevenueSharePercentageOverride(poolId) <= getMaxRevenueSharingFeePercentage())
 
 /// @title: `DefaultRevenueSharingFeePercentageInRange`
 /// @notice: `DefaultRevenueSharingFeePercentageInRange()` checks `DefaultRevenueSharingFeePercentageInRange` is always between `0` and `_MAX_REVENUE_SHARING_FEE_PERCENTAGE`. 
 /// @notice: SUCCESS
 invariant DefaultRevenueSharingFeePercentageInRange()
-    defaultRevenueSharingFeePercentage() >= 0 && 
-    defaultRevenueSharingFeePercentage() <= getMaxRevenueSharingFeePercentage()
+    getDefaultRevenueSharingFeePercentage() >= 0 && 
+    getDefaultRevenueSharingFeePercentage() <= getMaxRevenueSharingFeePercentage()
 
 /// @title: `SetRevenueSharingFeePercentageCorrectly`
 /// @notice: `setRevenueSharingFeePercentage(bytes32 poolId, uint256 newSwapFeePercentage)` reverts if the caller is not authenticated or `newSwapFeePercentage` is out-of-range,  otherwise it set `revenueSharePercentageOverride` for the given `poolId`. 
@@ -69,7 +69,7 @@ rule SetDefaultRevenueSharingFeePercentageCorrectly() {
     bool successful = !lastReverted;
 
     assert canPerform(e, getActionId(setDefaultRevenueSharingFeePercentage(uint256).selector), e.msg.sender)==false => !successful;    
-    assert(successful => toUint96(defaultSwapFeePercentage)==defaultRevenueSharingFeePercentage());
+    assert(successful => toUint96(defaultSwapFeePercentage)==getDefaultRevenueSharingFeePercentage());
 }
 
 /// @title: `SetPoolBeneficiaryCorrectly`
@@ -84,14 +84,18 @@ rule SetPoolBeneficiaryCorrectly() {
     setPoolBeneficiary@withrevert(e, poolId, newBeneficiary);
     bool successful = !lastReverted;
 
-    assert(e.msg.sender!=getBptOwner(poolId) => !successful);
+    assert(e.msg.sender != getBptOwner(poolId) => !successful);
     assert(successful => newBeneficiary==getBeneficiary(poolId));
 }
 
-function setup(bytes32 poolId, address treasury, address beneficiary) {
+function setup(bytes32 poolId, address treasury, address beneficiary, env e) {
+    address feesCollector = getProtocolFeesCollectorOnHarness();
+    address feesWithdrawer = getProtocolFeesWithdrawer();
     require treasury != beneficiary;
-    require treasury != protocolFeesCollector();
-    require beneficiary != protocolFeesCollector();
+    require treasury != feesWithdrawer;
+    require beneficiary != feesWithdrawer;
+    require beneficiary != feesCollector;
+    require feesWithdrawer != feesCollector;
     requireInvariant RevenueSharingFeePercentageInRange(poolId); 
     requireInvariant DefaultRevenueSharingFeePercentageInRange(); 
 }
@@ -99,21 +103,21 @@ function setup(bytes32 poolId, address treasury, address beneficiary) {
 /// @title: `CollectFeesRevertCondition`
 /// @notice: `collectFees(bytes32 poolId)` reverts when there are no fees to be collected.
 /// @notice: SUCCESS
-rule CollectFeesRevertCondition() {
-    env e;    
-    bytes32 poolId;
+// rule CollectFeesRevertCondition() {
+//     env e;    
+//     bytes32 poolId;
                 
-    uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
-    address treasuryAddr = treasury();
-    address beneficiaryAddr = getBeneficiary(poolId);
+//     uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
+//     address treasuryAddr = treasury();
+//     address beneficiaryAddr = getBeneficiary(poolId);
 
-    setup(poolId, treasuryAddr, beneficiaryAddr);
+//     setup(poolId, treasuryAddr, beneficiaryAddr);
 
-    collectFees@withrevert(e, poolId);
-    bool successful = !lastReverted;
+//     collectFees@withrevert(e, poolId);
+//     bool successful = !lastReverted;
 
-    assert feeCollectorBptBalance ==0 => !successful;
-}
+//     assert feeCollectorBptBalance ==0 => !successful;
+// }
 
 
 /// @title: `CollectFeesIntegrity`
@@ -125,13 +129,13 @@ rule CollectFeesIntegrity() {
                 
     uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
     uint256 feePercentage = getFeePercentage(poolId);
-    address treasuryAddr = treasury();
+    address treasuryAddr = getTreasury();
     address beneficiaryAddr = getBeneficiary(poolId);
     uint256 _treasuryBalance = getBalance(poolId, treasuryAddr);
     uint256 _beneficiaryBalance = getBalance(poolId, beneficiaryAddr);
     uint256 _totalSupply = getTotalSupply(poolId);
 
-    setup(poolId, treasuryAddr, beneficiaryAddr);
+    setup(poolId, treasuryAddr, beneficiaryAddr, e);
 
     collectFees(e, poolId);
 
@@ -144,7 +148,7 @@ rule CollectFeesIntegrity() {
     assert getBeneficiary(poolId) == 0 => _beneficiaryBalance == beneficiaryBalance_ && treasuryBalance_ == _treasuryBalance + feeCollectorBptBalance;    
     assert feePercentage == 0 => beneficiaryBalance_ == _beneficiaryBalance && treasuryBalance_ == _treasuryBalance + feeCollectorBptBalance;
     // If fee percentage, beneficiary and treasury are defined and fee collector has at least 1 token, both treasury and beneficiary should get some tokens
-    assert feePercentage > getMinRevenueSharingFeePercentage() && feePercentage <= getMaxRevenueSharingFeePercentage() && getBeneficiary(poolId) != 0 && feeCollectorBptBalance > 1000000000000000000 => beneficiaryBalance_ > _beneficiaryBalance && treasuryBalance_ > _treasuryBalance;
+    assert feePercentage <= getMaxRevenueSharingFeePercentage() && getBeneficiary(poolId) != 0 && feeCollectorBptBalance > 1000000000000000000 => beneficiaryBalance_ > _beneficiaryBalance && treasuryBalance_ > _treasuryBalance;
     assert feeCollectorBptBalance == (treasuryBalance_ - _treasuryBalance) + (beneficiaryBalance_ - _beneficiaryBalance);
     assert totalSupply_ == _totalSupply;
 }
@@ -156,7 +160,7 @@ rule ZeroFeeCollectorBptBalanceAfterCollectFee() {
     env e;    
     bytes32 poolId;
 
-    setup(poolId, treasury(), getBeneficiary(poolId));
+    setup(poolId, getTreasury(), getBeneficiary(poolId), e);
     collectFees(e, poolId);
     
     uint256 feeCollectorBptBalance = getFeeCollectorBptBalance(poolId);
