@@ -32,13 +32,13 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
     }
 
     function getBeneficiary(bytes32 poolId) public view returns (address) {
-        RevenueShareSettings memory s = this.getPoolSettings(poolId);
-        return s.beneficiary;
+        (, address beneficiary) = this.getPoolSettings(poolId);
+        return beneficiary;
     }
 
     function getRevenueSharePercentageOverride(bytes32 poolId) public view returns (uint256) {
-        RevenueShareSettings memory s = this.getPoolSettings(poolId);
-        return s.revenueSharePercentageOverride;
+        (uint256 revenueSharePercentageOverride,) = this.getPoolSettings(poolId);
+        return revenueSharePercentageOverride;
     }
 
     function getMaxRevenueSharingFeePercentage() public view returns (uint256) {
@@ -58,7 +58,8 @@ contract ProtocolFeeSplitterHarness is ProtocolFeeSplitter {
     }
 
     function getFeePercentage(bytes32 poolId) public view returns (uint256 feePercentage) {
-        uint256 poolFeeOverride = this.getPoolSettings(poolId).revenueSharePercentageOverride;
+        (uint256 revenueSharePercentageOverride,) = this.getPoolSettings(poolId);
+        uint256 poolFeeOverride = revenueSharePercentageOverride;
         feePercentage = poolFeeOverride != 0 ? poolFeeOverride : this.getDefaultRevenueSharingFeePercentage();
     }
 
